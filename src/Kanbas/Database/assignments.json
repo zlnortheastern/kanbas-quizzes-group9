@@ -1,0 +1,146 @@
+[
+  {
+    "_id": "A101",
+    "title": "Propulsion Assignment",
+    "course": "RS101",
+    "description": "The objective of this assignment is to apply the principles and concepts learned in the course to design, analyze, and optimize a rocket propulsion system. You will demonstrate your understanding of rocket propulsion fundamentals, fuel and combustion processes, and nozzle design by completing a series of tasks that involve theoretical calculations, design considerations, and performance analysis.",
+    "points": "100",
+    "assignmentGroup": "ASSIGNMENTS",
+    "displayGradeAs": "Percentage",
+    "submissionType": "Online",
+    "assign": {
+      "assignTo": "Everyone",
+      "due": "2024-05-13T23:59",
+      "availableFrom": "2024-05-06T23:59",
+      "until": "2024-05-20T23:59"
+    }
+  },
+  {
+    "_id": "A102",
+    "title": "Combustion Analysis",
+    "course": "RS101",
+    "description": "Analyze the combustion process in rocket engines, including the chemical reactions involved, the factors affecting combustion efficiency, and methods to mitigate instability.",
+    "points": "100",
+    "assignmentGroup": "ASSIGNMENTS",
+    "displayGradeAs": "Percentage",
+    "submissionType": "Online",
+    "assign": {
+      "assignTo": "Everyone",
+      "due": "2024-05-20T23:59",
+      "availableFrom": "2024-05-13T23:59",
+      "until": "2024-05-27T23:59"
+    }
+  },
+  {
+    "_id": "A103",
+    "title": "Nozzle Design Project",
+    "course": "RS101",
+    "description": "Design a rocket nozzle for a specified engine, including detailed calculations for the nozzle's geometry, performance analysis at different altitudes, and optimization for specific applications.",
+    "points": "150",
+    "assignmentGroup": "ASSIGNMENTS",
+    "displayGradeAs": "Percentage",
+    "submissionType": "Online",
+    "assign": {
+      "assignTo": "Everyone",
+      "due": "2024-05-27T23:59",
+      "availableFrom": "2024-05-20T23:59",
+      "until": "2024-06-03T23:59"
+    }
+  },
+  {
+    "_id": "A201",
+    "title": "Aerodynamics Quiz",
+    "course": "RS102",
+    "description": "A quiz covering the basic aerodynamic concepts, including lift, drag, and the principles of fluid dynamics as they apply to aerodynamics.",
+    "points": "100",
+    "assignmentGroup": "ASSIGNMENTS",
+    "displayGradeAs": "Points",
+    "submissionType": "Online",
+    "assign": {
+      "assignTo": "Everyone",
+      "due": "2024-05-15T23:59",
+      "availableFrom": "2024-05-08T23:59",
+      "until": "2024-05-22T23:59"
+    }
+  },
+  {
+    "_id": "A202",
+    "title": "Flow Analysis",
+    "course": "RS102",
+    "description": "Perform an analysis of subsonic and supersonic flow around various aerodynamic shapes, including calculations of pressure distribution and flow characteristics.",
+    "points": "100",
+    "assignmentGroup": "ASSIGNMENTS",
+    "displayGradeAs": "Percentage",
+    "submissionType": "Online",
+    "assign": {
+      "assignTo": "Everyone",
+      "due": "2024-05-22T23:59",
+      "availableFrom": "2024-05-15T23:59",
+      "until": "2024-05-29T23:59"
+    }
+  },
+  {
+    "_id": "A203",
+    "title": "Heating Analysis",
+    "course": "RS102",
+    "description": "Analyze the aerodynamic heating on a re-entry vehicle, including calculations of heat transfer rates, material selection for thermal protection, and methods to manage thermal stresses.",
+    "points": "150",
+    "assignmentGroup": "ASSIGNMENTS",
+    "displayGradeAs": "Percentage",
+    "submissionType": "Online",
+    "assign": {
+      "assignTo": "Everyone",
+      "due": "2024-05-29T23:59",
+      "availableFrom": "2024-05-22T23:59",
+      "until": "2024-06-05T23:59"
+    }
+  },
+  {
+    "_id": "A301",
+    "title": "Structural Design Task",
+    "course": "RS103",
+    "description": "Design a spacecraft structure, considering the selection of materials, load-bearing requirements, and the overall structural integrity for space missions.",
+    "points": "100",
+    "assignmentGroup": "ASSIGNMENTS",
+    "displayGradeAs": "Percentage",
+    "submissionType": "Online",
+    "assign": {
+      "assignTo": "Everyone",
+      "due": "2024-06-01T23:59",
+      "availableFrom": "2024-05-25T23:59",
+      "until": "2024-06-08T23:59"
+    }
+  },
+  {
+    "_id": "A302",
+    "title": "Orbital Calculations",
+    "course": "RS103",
+    "description": "Calculate orbital parameters and design orbital maneuvers for a specified mission, including the use of Kepler's laws and Hohmann transfer orbits.",
+    "points": "100",
+    "assignmentGroup": "ASSIGNMENTS",
+    "displayGradeAs": "Percentage",
+    "submissionType": "Online",
+    "assign": {
+      "assignTo": "Everyone",
+      "due": "2024-06-08T23:59",
+      "availableFrom": "2024-06-01T23:59",
+      "until": "2024-06-15T23:59"
+    }
+  },
+  {
+    "_id": "A303",
+    "title": "Systems Engineering Exam",
+    "course": "RS103",
+    "description": "An exam covering the principles of systems engineering, including the integration of subsystems, reliability analysis, and project management in aerospace applications.",
+    "points": "200",
+    "assignmentGroup": "ASSIGNMENTS",
+    "displayGradeAs": "Percentage",
+    "submissionType": "Online",
+    "assign": {
+      "assignTo": "Everyone",
+      "due": "2024-06-15T23:59",
+      "availableFrom": "2024-06-08T23:59",
+      "until": "2024-06-22T23:59"
+    }
+  }
+]

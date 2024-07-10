@@ -1,0 +1,704 @@
+[
+  {
+    "_id": "M101",
+    "name": "Introduction to Rocket Propulsion",
+    "description": "Basic principles of rocket propulsion and rocket engines.",
+    "course": "RS101",
+    "lessons": [
+      {
+        "_id": "L101",
+        "name": "History of Rocketry",
+        "description": "A brief history of rocketry and space exploration.",
+        "module": "M101"
+      },
+      {
+        "_id": "L102",
+        "name": "Rocket Propulsion Fundamentals",
+        "description": "Basic principles of rocket propulsion.",
+        "module": "M101"
+      },
+      {
+        "_id": "L103",
+        "name": "Rocket Engine Types",
+        "description": "Overview of different types of rocket engines.",
+        "module": "M101"
+      }
+    ]
+  },
+  {
+    "_id": "M102",
+    "name": "Fuel and Combustion",
+    "description": "Understanding rocket fuel, combustion processes, and efficiency.",
+    "course": "RS101",
+    "lessons": [
+      {
+        "_id": "L201",
+        "name": "Rocket Fuel",
+        "description": "Overview of different types of rocket fuels.",
+        "module": "M102"
+      },
+      {
+        "_id": "L202",
+        "name": "Combustion Processes",
+        "description": "Understanding combustion processes and efficiency.",
+        "module": "M102"
+      },
+      {
+        "_id": "L203",
+        "name": "Combustion Instability",
+        "description": "Understanding combustion instability and mitigation.",
+        "module": "M102"
+      }
+    ]
+  },
+  {
+    "_id": "M103",
+    "name": "Nozzle Design",
+    "description": "Principles of rocket nozzle design and performance optimization.",
+    "course": "RS101",
+    "lessons": [
+      {
+        "_id": "L301",
+        "name": "Nozzle Design",
+        "description": "Overview of different types of rocket nozzles.",
+        "module": "M103"
+      },
+      {
+        "_id": "L302",
+        "name": "Nozzle Performance",
+        "description": "Understanding nozzle performance and efficiency.",
+        "module": "M103"
+      },
+      {
+        "_id": "L303",
+        "name": "Nozzle Optimization",
+        "description": "Optimizing nozzle design for specific applications.",
+        "module": "M103"
+      }
+    ]
+  },
+  {
+    "_id": "M201",
+    "name": "Fundamentals of Aerodynamics",
+    "description": "Basic aerodynamic concepts and fluid dynamics principles.",
+    "course": "RS102",
+    "lessons": [
+      {
+        "_id": "L401",
+        "name": "Aerodynamic Forces",
+        "description": "Understanding lift, drag, and other aerodynamic forces.",
+        "module": "M201"
+      },
+      {
+        "_id": "L402",
+        "name": "Airfoil Design",
+        "description": "Design principles of airfoils and their applications.",
+        "module": "M201"
+      },
+      {
+        "_id": "L403",
+        "name": "Wind Tunnel Testing",
+        "description": "Methods and importance of wind tunnel testing in aerodynamics.",
+        "module": "M201"
+      }
+    ]
+  },
+  {
+    "_id": "M202",
+    "name": "Subsonic and Supersonic Flow",
+    "description": "Understanding subsonic and supersonic aerodynamic behaviors.",
+    "course": "RS102",
+    "lessons": [
+      {
+        "_id": "L501",
+        "name": "Subsonic Flow",
+        "description": "Characteristics and principles of subsonic flow.",
+        "module": "M202"
+      },
+      {
+        "_id": "L502",
+        "name": "Supersonic Flow",
+        "description": "Characteristics and principles of supersonic flow.",
+        "module": "M202"
+      },
+      {
+        "_id": "L503",
+        "name": "Shock Waves",
+        "description": "Formation and effects of shock waves in supersonic flow.",
+        "module": "M202"
+      }
+    ]
+  },
+  {
+    "_id": "M203",
+    "name": "Aerodynamic Heating",
+    "description": "Study of aerodynamic heating and thermal protection systems.",
+    "course": "RS102",
+    "lessons": [
+      {
+        "_id": "L601",
+        "name": "Heat Transfer Mechanisms",
+        "description": "Understanding the mechanisms of heat transfer in aerodynamics.",
+        "module": "M203"
+      },
+      {
+        "_id": "L602",
+        "name": "Thermal Protection Materials",
+        "description": "Materials used for thermal protection in high-speed flight.",
+        "module": "M203"
+      },
+      {
+        "_id": "L603",
+        "name": "Thermal Stress Analysis",
+        "description": "Analyzing and mitigating thermal stresses in aerospace structures.",
+        "module": "M203"
+      }
+    ]
+  },
+  {
+    "_id": "M301",
+    "name": "Spacecraft Structural Design",
+    "description": "Fundamentals of designing spacecraft structures and materials selection.",
+    "course": "RS103",
+    "lessons": [
+      {
+        "_id": "L701",
+        "name": "Materials for Spacecraft",
+        "description": "Overview of materials used in spacecraft construction.",
+        "module": "M301"
+      },
+      {
+        "_id": "L702",
+        "name": "Structural Analysis",
+        "description": "Methods for analyzing the structural integrity of spacecraft.",
+        "module": "M301"
+      },
+      {
+        "_id": "L703",
+        "name": "Load Bearing Components",
+        "description": "Design and analysis of load-bearing components in spacecraft.",
+        "module": "M301"
+      }
+    ]
+  },
+  {
+    "_id": "M302",
+    "name": "Orbital Mechanics",
+    "description": "Understanding orbital dynamics and mission planning.",
+    "course": "RS103",
+    "lessons": [
+      {
+        "_id": "L801",
+        "name": "Kepler's Laws",
+        "description": "The fundamental laws of planetary motion by Kepler.",
+        "module": "M302"
+      },
+      {
+        "_id": "L802",
+        "name": "Orbital Transfers",
+        "description": "Techniques for transferring between different orbits.",
+        "module": "M302"
+      },
+      {
+        "_id": "L803",
+        "name": "Mission Planning",
+        "description": "Principles and considerations for planning space missions.",
+        "module": "M302"
+      }
+    ]
+  },
+  {
+    "_id": "M303",
+    "name": "Spacecraft Systems Engineering",
+    "description": "Overview of spacecraft systems and subsystems engineering.",
+    "course": "RS103",
+    "lessons": [
+      {
+        "_id": "L901",
+        "name": "Systems Engineering Basics",
+        "description": "Introduction to systems engineering principles.",
+        "module": "M303"
+      },
+      {
+        "_id": "L902",
+        "name": "Subsystems Integration",
+        "description": "Methods for integrating various spacecraft subsystems.",
+        "module": "M303"
+      },
+      {
+        "_id": "L903",
+        "name": "Reliability and Redundancy",
+        "description": "Ensuring reliability and redundancy in spacecraft systems.",
+        "module": "M303"
+      }
+    ]
+  },
+  {
+    "_id": "M401",
+    "name": "Introduction to Satellite Communication",
+    "description": "Basic principles and concepts of satellite communication.",
+    "course": "RS104",
+    "lessons": [
+      {
+        "_id": "L1001",
+        "name": "Satellite Orbits",
+        "description": "Understanding different satellite orbits and their applications.",
+        "module": "M401"
+      },
+      {
+        "_id": "L1002",
+        "name": "Signal Transmission",
+        "description": "Principles of signal transmission and reception.",
+        "module": "M401"
+      },
+      {
+        "_id": "L1003",
+        "name": "Communication Systems",
+        "description": "Overview of satellite communication systems.",
+        "module": "M401"
+      }
+    ]
+  },
+  {
+    "_id": "M402",
+    "name": "Introduction to Space Robotics",
+    "description": "Fundamentals of robotics in space applications.",
+    "course": "RS105",
+    "lessons": [
+      {
+        "_id": "L1101",
+        "name": "Robot Kinematics",
+        "description": "Understanding the kinematics of space robots.",
+        "module": "M402"
+      },
+      {
+        "_id": "L1102",
+        "name": "Control Systems",
+        "description": "Design and implementation of robotic control systems.",
+        "module": "M402"
+      },
+      {
+        "_id": "L1103",
+        "name": "Robotic Missions",
+        "description": "Overview of robotic missions in space exploration.",
+        "module": "M402"
+      }
+    ]
+  },
+  {
+    "_id": "M403",
+    "name": "Introduction to Astrobiology",
+    "description": "Study of life in the universe and conditions for habitability.",
+    "course": "RS106",
+    "lessons": [
+      {
+        "_id": "L1201",
+        "name": "Origins of Life",
+        "description": "Understanding the origins of life on Earth.",
+        "module": "M403"
+      },
+      {
+        "_id": "L1202",
+        "name": "Habitable Environments",
+        "description": "Conditions required for habitability in the universe.",
+        "module": "M403"
+      },
+      {
+        "_id": "L1203",
+        "name": "Search for Extraterrestrial Life",
+        "description": "Methods and missions searching for life beyond Earth.",
+        "module": "M403"
+      }
+    ]
+  },
+  {
+    "_id": "M404",
+    "name": "Space Policy and Law",
+    "description": "Understanding the legal and policy frameworks governing space activities.",
+    "course": "RS107",
+    "lessons": [
+      {
+        "_id": "L1301",
+        "name": "Space Treaties",
+        "description": "Overview of major international space treaties.",
+        "module": "M404"
+      },
+      {
+        "_id": "L1302",
+        "name": "National Space Laws",
+        "description": "Understanding national laws and regulations on space activities.",
+        "module": "M404"
+      },
+      {
+        "_id": "L1303",
+        "name": "Space Governance",
+        "description": "The role of international organizations in space governance.",
+        "module": "M404"
+      }
+    ]
+  },
+  {
+    "_id": "M405",
+    "name": "Space Mission Design",
+    "description": "Principles and practices of designing space missions.",
+    "course": "RS108",
+    "lessons": [
+      {
+        "_id": "L1401",
+        "name": "Mission Planning",
+        "description": "Steps and considerations in planning a space mission.",
+        "module": "M405"
+      },
+      {
+        "_id": "L1402",
+        "name": "Payload Design",
+        "description": "Designing and optimizing payloads for space missions.",
+        "module": "M405"
+      },
+      {
+        "_id": "L1403",
+        "name": "Mission Analysis",
+        "description": "Analyzing mission requirements and constraints.",
+        "module": "M405"
+      }
+    ]
+  },
+  {
+    "_id": "M406",
+    "name": "Spacecraft Thermal Control",
+    "description": "Techniques and systems for managing thermal environments in spacecraft.",
+    "course": "RS109",
+    "lessons": [
+      {
+        "_id": "L1501",
+        "name": "Thermal Environment",
+        "description": "Understanding the thermal environment in space.",
+        "module": "M406"
+      },
+      {
+        "_id": "L1502",
+        "name": "Thermal Control Systems",
+        "description": "Designing systems to manage spacecraft temperatures.",
+        "module": "M406"
+      },
+      {
+        "_id": "L1503",
+        "name": "Heat Transfer Methods",
+        "description": "Methods for transferring heat in spacecraft.",
+        "module": "M406"
+      }
+    ]
+  },
+  {
+    "_id": "M407",
+    "name": "Introduction to Space Medicine",
+    "description": "Understanding the medical challenges and solutions in space.",
+    "course": "RS110",
+    "lessons": [
+      {
+        "_id": "L1601",
+        "name": "Human Physiology in Space",
+        "description": "Effects of space environment on human physiology.",
+        "module": "M407"
+      },
+      {
+        "_id": "L1602",
+        "name": "Space Medicine Practices",
+        "description": "Medical practices and technologies for space missions.",
+        "module": "M407"
+      },
+      {
+        "_id": "L1603",
+        "name": "Psychological Challenges",
+        "description": "Addressing psychological challenges in space.",
+        "module": "M407"
+      }
+    ]
+  },
+  {
+    "_id": "M408",
+    "name": "Space Power Systems",
+    "description": "Understanding power generation and management for spacecraft.",
+    "course": "RS111",
+    "lessons": [
+      {
+        "_id": "L1701",
+        "name": "Solar Power",
+        "description": "Harnessing solar energy for space applications.",
+        "module": "M408"
+      },
+      {
+        "_id": "L1702",
+        "name": "Battery Systems",
+        "description": "Design and management of battery systems in spacecraft.",
+        "module": "M408"
+      },
+      {
+        "_id": "L1703",
+        "name": "Power Distribution",
+        "description": "Techniques for distributing power within spacecraft.",
+        "module": "M408"
+      }
+    ]
+  },
+  {
+    "_id": "M409",
+    "name": "Introduction to Space Propulsion",
+    "description": "Fundamentals of propulsion systems for space exploration.",
+    "course": "RS112",
+    "lessons": [
+      {
+        "_id": "L1801",
+        "name": "Chemical Propulsion",
+        "description": "Principles of chemical propulsion systems.",
+        "module": "M409"
+      },
+      {
+        "_id": "L1802",
+        "name": "Electric Propulsion",
+        "description": "Overview of electric propulsion technologies.",
+        "module": "M409"
+      },
+      {
+        "_id": "L1803",
+        "name": "Advanced Propulsion Concepts",
+        "description": "Exploring advanced propulsion concepts for future missions.",
+        "module": "M409"
+      }
+    ]
+  },
+  {
+    "_id": "M410",
+    "name": "Space Environment",
+    "description": "Studying the environment of space and its impact on missions.",
+    "course": "RS113",
+    "lessons": [
+      {
+        "_id": "L1901",
+        "name": "Radiation in Space",
+        "description": "Understanding radiation hazards and protection in space.",
+        "module": "M410"
+      },
+      {
+        "_id": "L1902",
+        "name": "Microgravity Effects",
+        "description": "Effects of microgravity on materials and systems.",
+        "module": "M410"
+      },
+      {
+        "_id": "L1903",
+        "name": "Space Debris",
+        "description": "Challenges and mitigation of space debris.",
+        "module": "M410"
+      }
+    ]
+  },
+  {
+    "_id": "M411",
+    "name": "Space Manufacturing",
+    "description": "Techniques and technologies for manufacturing in space.",
+    "course": "RS114",
+    "lessons": [
+      {
+        "_id": "L2001",
+        "name": "Additive Manufacturing",
+        "description": "Applications of 3D printing in space.",
+        "module": "M411"
+      },
+      {
+        "_id": "L2002",
+        "name": "Material Selection",
+        "description": "Selecting materials for manufacturing in space.",
+        "module": "M411"
+      },
+      {
+        "_id": "L2003",
+        "name": "In-Situ Resource Utilization",
+        "description": "Utilizing space resources for manufacturing.",
+        "module": "M411"
+      }
+    ]
+  },
+  {
+    "_id": "M412",
+    "name": "Introduction to Space Tourism",
+    "description": "Exploring the emerging industry of space tourism.",
+    "course": "RS115",
+    "lessons": [
+      {
+        "_id": "L2101",
+        "name": "Commercial Spaceflight",
+        "description": "Overview of commercial spaceflight companies and missions.",
+        "module": "M412"
+      },
+      {
+        "_id": "L2102",
+        "name": "Tourist Experience",
+        "description": "Designing the space tourist experience.",
+        "module": "M412"
+      },
+      {
+        "_id": "L2103",
+        "name": "Safety and Regulations",
+        "description": "Ensuring safety and compliance in space tourism.",
+        "module": "M412"
+      }
+    ]
+  },
+  {
+    "_id": "M413",
+    "name": "Space Data and AI",
+    "description": "Leveraging data and artificial intelligence in space exploration.",
+    "course": "RS116",
+    "lessons": [
+      {
+        "_id": "L2201",
+        "name": "Data Collection",
+        "description": "Methods for collecting data in space missions.",
+        "module": "M413"
+      },
+      {
+        "_id": "L2202",
+        "name": "Data Analysis",
+        "description": "Techniques for analyzing space mission data.",
+        "module": "M413"
+      },
+      {
+        "_id": "L2203",
+        "name": "AI Applications",
+        "description": "Using artificial intelligence to enhance space missions.",
+        "module": "M413"
+      }
+    ]
+  },
+  {
+    "_id": "M414",
+    "name": "Space Economics",
+    "description": "Understanding the economic aspects of space activities.",
+    "course": "RS117",
+    "lessons": [
+      {
+        "_id": "L2301",
+        "name": "Space Markets",
+        "description": "Analyzing the markets for space-related products and services.",
+        "module": "M414"
+      },
+      {
+        "_id": "L2302",
+        "name": "Investment in Space",
+        "description": "Exploring investment opportunities in the space sector.",
+        "module": "M414"
+      },
+      {
+        "_id": "L2303",
+        "name": "Cost Management",
+        "description": "Managing costs and budgets for space missions.",
+        "module": "M414"
+      }
+    ]
+  },
+  {
+    "_id": "M415",
+    "name": "Space Agriculture",
+    "description": "Growing food and plants in space environments.",
+    "course": "RS118",
+    "lessons": [
+      {
+        "_id": "L2401",
+        "name": "Hydroponics",
+        "description": "Techniques for growing plants without soil in space.",
+        "module": "M415"
+      },
+      {
+        "_id": "L2402",
+        "name": "Nutrient Delivery",
+        "description": "Ensuring efficient nutrient delivery to plants in space.",
+        "module": "M415"
+      },
+      {
+        "_id": "L2403",
+        "name": "Life Support Integration",
+        "description": "Integrating space agriculture with life support systems.",
+        "module": "M415"
+      }
+    ]
+  },
+  {
+    "_id": "M416",
+    "name": "Introduction to Space Ethics",
+    "description": "Exploring ethical considerations in space exploration and use.",
+    "course": "RS119",
+    "lessons": [
+      {
+        "_id": "L2501",
+        "name": "Ethics of Space Exploration",
+        "description": "Ethical implications of exploring and colonizing space.",
+        "module": "M416"
+      },
+      {
+        "_id": "L2502",
+        "name": "Environmental Ethics",
+        "description": "Considering the impact of space activities on celestial environments.",
+        "module": "M416"
+      },
+      {
+        "_id": "L2503",
+        "name": "Social Responsibility",
+        "description": "Ensuring social responsibility in space activities.",
+        "module": "M416"
+      }
+    ]
+  },
+  {
+    "_id": "M417",
+    "name": "Introduction to Space Geology",
+    "description": "Study of geological processes and features on other planets.",
+    "course": "RS120",
+    "lessons": [
+      {
+        "_id": "L2601",
+        "name": "Planetary Geology",
+        "description": "Geological processes on different planets and moons.",
+        "module": "M417"
+      },
+      {
+        "_id": "L2602",
+        "name": "Surface Features",
+        "description": "Studying surface features and their formation.",
+        "module": "M417"
+      },
+      {
+        "_id": "L2603",
+        "name": "Geological Mapping",
+        "description": "Techniques for mapping geological features on other planets.",
+        "module": "M417"
+      }
+    ]
+  },
+  {
+    "_id": "M418",
+    "name": "Introduction to Space Archaeology",
+    "description": "Exploring human-made artifacts in space.",
+    "course": "RS121",
+    "lessons": [
+      {
+        "_id": "L2701",
+        "name": "History of Space Artifacts",
+        "description": "Study of human-made artifacts in space history.",
+        "module": "M418"
+      },
+      {
+        "_id": "L2702",
+        "name": "Preservation of Space Heritage",
+        "description": "Methods for preserving historical space artifacts.",
+        "module": "M418"
+      },
+      {
+        "_id": "L2703",
+        "name": "Future of Space Archaeology",
+        "description": "Exploring the future prospects and projects in space archaeology.",
+        "module": "M418"
+      }
+    ]
+  }
+]
