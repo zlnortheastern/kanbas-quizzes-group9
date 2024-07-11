@@ -5,11 +5,12 @@ export default function Signup() {
   const [user, setUser] = useState({
     username: "",
     password: "",
+    _password: "",
     role: "STUDENT",
   });
   const handleSubmitEvent = (e: any) => {
     e.preventDefault();
-    console.log(e.target.value);
+    console.log(e.target.elements.username.value);
   };
   const handleInput = (e: any) => {
     const { name, value } = e.target;
@@ -40,6 +41,7 @@ export default function Signup() {
               Enter a username
             </label>
             <input
+            name="username"
               id="kanbas-signup-username"
               className="form-control p-3"
               onChange={handleInput}
@@ -53,6 +55,7 @@ export default function Signup() {
               Enter a password
             </label>
             <input
+            name="password"
               id="kanbas-signup-password"
               className="form-control p-3"
               onChange={handleInput}
@@ -66,6 +69,7 @@ export default function Signup() {
               Re-enter the password
             </label>
             <input
+            name="_password"
               id="kanbas-signup-reenter"
               className="form-control p-3"
               onChange={handleInput}
@@ -79,14 +83,15 @@ export default function Signup() {
               Choose a role
             </label>
             <select
-              name="role-select"
+              className="form-select form-select-lg"
+              name="role"
               id="kanbas-signup-role"
               onChange={handleInput}
             >
               <option value="STUDENT" selected>
                 Student
               </option>
-              <option value="FACULTY">Student</option>
+              <option value="FACULTY">FACULTY</option>
             </select>
           </div>
           <div className="form-group mb-4">
