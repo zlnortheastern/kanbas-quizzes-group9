@@ -3,8 +3,10 @@ import { AiOutlineDashboard } from "react-icons/ai";
 import { LiaBookSolid, LiaCogSolid } from "react-icons/lia";
 import { IoCalendarOutline } from "react-icons/io5";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../Authentication/AuthProvider";
 export default function KanbasNavigation() {
   const { pathname } = useLocation();
+  const user = useAuth();
   const links = [
     { label: "Dashboard", path: "/Kanbas/Dashboard", icon: AiOutlineDashboard },
     { label: "Courses", path: "/Kanbas/Dashboard", icon: LiaBookSolid },
@@ -12,8 +14,11 @@ export default function KanbasNavigation() {
     { label: "Inbox", path: "/Kanbas/Inbox", icon: FaInbox },
     { label: "Labs", path: "/Labs", icon: LiaCogSolid },
   ];
-  return (
-    <div className="d-none d-md-block bg-black">
+  return user.token ? (
+    <div
+      className="d-none d-md-block bg-black position-fixed"
+      style={{ height: "100%" }}
+    >
       <div id="wd-kanbas-navigation" className="list-group rounded-0">
         <a
           id="wd-account-link"
@@ -59,5 +64,7 @@ export default function KanbasNavigation() {
         ))}
       </div>
     </div>
+  ) : (
+    <div></div>
   );
 }
