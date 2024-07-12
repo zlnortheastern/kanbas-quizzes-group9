@@ -9,6 +9,7 @@ import * as client from "./Courses/client";
 import Login from "./Authentication/Login";
 import Signup from "./Authentication/Signup";
 import { AuthProvider, useAuth } from "./Authentication/AuthProvider";
+import Account from "./Authentication/Account";
 
 export default function Kanbas() {
   const [courses, setCourses] = useState<any[]>([]);
@@ -58,7 +59,7 @@ export default function Kanbas() {
               <Routes>
                 <Route element={<RedirectLogOut />}>
                   <Route path="/" element={<Navigate to="Dashboard" />} />
-                  <Route path="Account" element={<h1>Account</h1>} />
+                  <Route path="Account" element={<Account />} />
                   <Route
                     path="Dashboard"
                     element={
