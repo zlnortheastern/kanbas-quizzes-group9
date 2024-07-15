@@ -1,19 +1,10 @@
 import axios from "axios";
 const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER;
 const USERS_API = `${REMOTE_SERVER}/api/users`;
-export const updateAssignment = async (assignment: any) => {
-  const response = await axios.put(
-    `${USERS_API}/${assignment._id}`,
-    assignment
-  );
+export const updateUser = async (user: any) => {
+  const response = await axios.put(`${USERS_API}/update/${user._id}`, user);
   return response.data;
 };
-
-export const deleteAssignment = async (assignmentId: string) => {
-  const response = await axios.delete(`${USERS_API}/${assignmentId}`);
-  return response.data;
-};
-
 export const getUser = async (userId: string) => {
   const response = await axios.get(`${USERS_API}/get/${userId}`);
   return response.data;
