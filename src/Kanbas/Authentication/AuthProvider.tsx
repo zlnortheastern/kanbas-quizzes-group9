@@ -1,9 +1,23 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import * as client from "./client";
 
-const AuthContext = createContext(null as any);
+export const useUserRole = () => {
+  const [role, setRole] = useState("");
+  const auth = useAuth();
 
+  useEffect(() => {
+    const fetchRole = async () => {
+      const userRole = await auth.getRole();
+      setRole(userRole);
+    };
+    fetchRole();
+  }, [auth]);
+
+  return role;
+};
+
+const AuthContext = createContext(null as any);
 export const useAuth = () => {
   return useContext(AuthContext);
 };
@@ -25,7 +39,10 @@ export const AuthProvider = ({ children }: any) => {
       throw new Error(error.message);
     }
   };
-
+  const getRole = async () => {
+    const data = await client.getUser(token);
+    return data[0].role;
+  }
   const logout = () => {
     setUser(null);
     setToken("");
@@ -34,7 +51,7 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, token, login, logout, getRole }}>
       {children}
     </AuthContext.Provider>
   );
