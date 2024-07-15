@@ -32,7 +32,7 @@ export default function Login() {
     }));
   };
   return (
-    <div className="row" style={{ padding: "30px" }}>
+    <div style={{ padding: "30px", marginLeft:"-120px"}}>
       {errorMessage && (
         <div
           id="wd-todo-error-messag"

@@ -5,8 +5,8 @@ export default function Signup() {
   const [user, setUser] = useState({
     username: "",
     password: "",
-    firstName:"",
-    lastName:"",
+    firstName: "",
+    lastName: "",
     email: "",
     dob: "",
     role: "STUDENT",
@@ -37,8 +37,8 @@ export default function Signup() {
   };
   const handleSubmitEvent = (e: any) => {
     e.preventDefault();
-    if(checkEmpty(user)){
-        createUser(user);
+    if (checkEmpty(user)) {
+      createUser(user);
     }
   };
   const handleInput = (e: any) => {
@@ -49,7 +49,7 @@ export default function Signup() {
     }));
   };
   return (
-    <div className="row" style={{ padding: "30px" }}>
+    <div style={{ padding: "30px", marginLeft: "-120px" }}>
       {errorMessage && (
         <div
           id="wd-todo-error-messag"
