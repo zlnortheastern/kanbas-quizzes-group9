@@ -16,6 +16,6 @@ export const dropEnrollment = async (userId: string, courseId: string) => {
   return response.data;
 };
 export const enrollCourse = async (userId: string, courseId: string) => {
-  const response = await axios.post(`ENROLLMENTS_API/${userId}/${courseId}`);
+  const response = await axios.post(`${ENROLLMENTS_API}/${userId}/${courseId}`);
   return response.data;
 };

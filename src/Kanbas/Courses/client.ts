@@ -9,6 +9,10 @@ export const createCourse = async (course: any) => {
   const response = await axios.post(COURSES_API, course);
   return response.data;
 };
+export const createCourseByFaculty = async (userId: string, course: any) => {
+  const response = await axios.post(`${COURSES_API}/${userId}`, course);
+  return response.data;
+};
 export const deleteCourse = async (id: string) => {
   const response = await axios.delete(`${COURSES_API}/${id}`);
   return response.data;
