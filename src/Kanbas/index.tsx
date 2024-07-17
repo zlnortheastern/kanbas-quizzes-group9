@@ -1,11 +1,15 @@
 import KanbasNavigation from "./Navigation";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import Courses from "./Courses";
 import { useEffect, useState } from "react";
 import store from "./store";
 import { Provider } from "react-redux";
 import * as client from "./Courses/client";
+import Login from "./Authentication/Login";
+import Signup from "./Authentication/Signup";
+import { AuthProvider, useAuth } from "./Authentication/AuthProvider";
+import Account from "./Authentication/Account";
 
 export default function Kanbas() {
   const [courses, setCourses] = useState<any[]>([]);
@@ -46,37 +50,53 @@ export default function Kanbas() {
     );
   };
   return (
-    <Provider store={store}>
-      <div id="wd-kanbas" className="h-100">
-        <div className="d-flex h-100">
-          <div className="d-none d-md-block bg-black">
+    <AuthProvider>
+      <Provider store={store}>
+        <div id="wd-kanbas" className="h-100">
+          <div className="d-flex h-100">
             <KanbasNavigation />
-          </div>
-          <div className="flex-fill p-4">
-            <Routes>
-              <Route path="/" element={<Navigate to="Dashboard" />} />
-              <Route path="Account" element={<h1>Account</h1>} />
-              <Route
-                path="Dashboard"
-                element={
-                  <Dashboard
-                    courses={courses}
-                    course={course}
-                    setCourse={setCourse}
-                    addNewCourse={addNewCourse}
-                    deleteCourse={deleteCourse}
-                    updateCourse={updateCourse}
+            <div className="flex-fill p-4" style={{marginLeft:"120px"}}>
+              <Routes>
+                <Route element={<RedirectLogOut />}>
+                  <Route path="/" element={<Navigate to="Dashboard" />} />
+                  <Route path="Account" element={<Account />} />
+                  <Route
+                    path="Dashboard"
+                    element={
+                      <Dashboard
+                        courses={courses}
+                        course={course}
+                        setCourse={setCourse}
+                        addNewCourse={addNewCourse}
+                        deleteCourse={deleteCourse}
+                        updateCourse={updateCourse}
+                      />
+                    }
                   />
-                }
-              />
-              <Route
-                path="Courses/:cid/*"
-                element={<Courses courses={courses} />}
-              />
-            </Routes>
+                  <Route
+                    path="Courses/:cid/*"
+                    element={<Courses courses={courses} />}
+                  />
+                </Route>
+                <Route element={<RedirectLogIn />}>
+                  <Route path="Login" element={<Login />} />
+                  <Route path="Signup" element={<Signup />} />
+                </Route>
+              </Routes>
+            </div>
           </div>
         </div>
-      </div>
-    </Provider>
+      </Provider>
+    </AuthProvider>
   );
 }
+const RedirectLogOut = () => {
+  const user = useAuth();
+  if (!user.token) return <Navigate to="Login" />;
+  return <Outlet />;
+};
+const RedirectLogIn = () => {
+  const user = useAuth();
+  if (user.token) return <Navigate to="Dashboard" />;
+  return <Outlet />;
+};
