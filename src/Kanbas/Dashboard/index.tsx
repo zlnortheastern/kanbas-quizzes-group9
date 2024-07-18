@@ -43,8 +43,7 @@ export default function Dashboard({
               id="wd-add-new-course-click"
               onClick={() => addNewCourse(auth.token)}
             >
-              {" "}
-              Add{" "}
+              Add
             </button>
             <button
               className="btn btn-warning float-end me-2"
@@ -69,7 +68,7 @@ export default function Dashboard({
           />
           <hr />
           <h2 id="wd-dashboard-published">
-            Published Courses ({courses.length})
+            Published Courses ({enrollments.length})
           </h2>
         </div>
       ) : (

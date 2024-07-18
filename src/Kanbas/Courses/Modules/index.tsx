@@ -13,11 +13,13 @@ import {
   updateModule,
 } from "./reducer";
 import * as client from "./client";
+import { useUserRole } from "../../Authentication/AuthProvider";
 export default function Modules() {
   const { cid } = useParams();
   const [moduleName, setModuleName] = useState("");
   const { modules } = useSelector((state: any) => state.modulesReducer);
   const dispatch = useDispatch();
+  const role = useUserRole();
   const removeModule = async (moduleId: string) => {
     await client.deleteModule(moduleId);
     dispatch(deleteModule(moduleId));
@@ -47,6 +49,7 @@ export default function Modules() {
           createModule({ name: moduleName, course: cid });
           setModuleName("");
         }}
+        role={role}
       />
       <br />
       <br />
@@ -77,13 +80,15 @@ export default function Modules() {
                     value={module.name}
                   />
                 )}
-                <ModuleControlButtons
-                  moduleId={module._id}
-                  deleteModule={(moduleId) => {
-                    removeModule(moduleId);
-                  }}
-                  editModule={(moduleId) => dispatch(editModule(moduleId))}
-                />
+                {role === "FACULTY" && (
+                  <ModuleControlButtons
+                    moduleId={module._id}
+                    deleteModule={(moduleId) => {
+                      removeModule(moduleId);
+                    }}
+                    editModule={(moduleId) => dispatch(editModule(moduleId))}
+                  />
+                )}
               </div>
               {module.lessons && (
                 <ul className="wd-lessons list-group rounded-0">
@@ -91,7 +96,7 @@ export default function Modules() {
                     <li className="wd-lesson list-group-item p-3 ps-1">
                       <BsGripVertical className="me-2 fs-3" />
                       {lesson.name}
-                      <LessonControlButtons />
+                      {role === "FACULTY" && <LessonControlButtons />}
                     </li>
                   ))}
                 </ul>
