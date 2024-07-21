@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
-import { deleteQuiz, togglePublishQuiz } from './reducer';
-import * as client from './client';
-import { FaEdit, FaTrash, FaCheck } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { Link, useParams } from "react-router-dom";
+import { deleteQuiz, togglePublishQuiz } from "./reducer";
+import * as client from "./client";
+import { FaEdit, FaTrash, FaCheck } from "react-icons/fa";
 
 interface QuizContextMenuProps {
   quizId: string;
-  onClose: () => void;
 }
 
-const QuizContextMenu = ({ quizId, onClose }: QuizContextMenuProps) => {
+const QuizContextMenu = ({ quizId }: QuizContextMenuProps) => {
   const { cid } = useParams<{ cid: string }>();
   const dispatch = useDispatch();
   const [quiz, setQuiz] = useState<any>(null);
@@ -27,7 +26,6 @@ const QuizContextMenu = ({ quizId, onClose }: QuizContextMenuProps) => {
   const handleDelete = async () => {
     await client.deleteQuiz(quizId);
     dispatch(deleteQuiz(quizId));
-    onClose();
   };
 
   const handleTogglePublish = async () => {
@@ -35,26 +33,30 @@ const QuizContextMenu = ({ quizId, onClose }: QuizContextMenuProps) => {
       quiz.published = !quiz.published;
       await client.updateQuiz(quiz);
       dispatch(togglePublishQuiz(quizId));
-      onClose();
     }
   };
 
   return (
-    <div className="context-menu">
-      <ul className="list-group">
-        <li className="list-group-item">
-          <Link to={`/Kanbas/Courses/${cid}/Quizzes/${quizId}/edit`} className="text-decoration-none">
+      <ul className="dropdown-menu">
+        <li>
+          <Link
+            to={`/Kanbas/Courses/${cid}/Quizzes/${quizId}/edit`}
+            className="text-decoration-none dropdown-item"
+          >
             <FaEdit /> Edit
           </Link>
         </li>
-        <li className="list-group-item" onClick={handleDelete}>
-          <FaTrash /> Delete
+        <li onClick={handleDelete}>
+          <button className="dropdown-item">
+            <FaTrash /> Delete
+          </button>
         </li>
-        <li className="list-group-item" onClick={handleTogglePublish}>
-          <FaCheck /> {quiz && quiz.published ? 'Unpublish' : 'Publish'}
+        <li onClick={handleTogglePublish}>
+          <button className="dropdown-item">
+            <FaCheck /> {quiz && quiz.published ? "Unpublish" : "Publish"}
+          </button>
         </li>
       </ul>
-    </div>
   );
 };
 
