@@ -103,6 +103,18 @@ export default function Account() {
               value={updateUser.lastName}
               onChange={handleInput}
             />
+            {/* Set role editable for easily testing */}
+            <label htmlFor="user-role">Role</label>
+            <select
+              className="form-select mb-5"
+              id="user-role"
+              name="role"
+              value={updateUser.role}
+              onChange={handleInput}
+            >
+              <option value="FACULTY">Faculty</option>
+              <option value="STUDENT">Student</option>
+            </select>
             <label htmlFor="email">Email</label>
             <input
               type="email"

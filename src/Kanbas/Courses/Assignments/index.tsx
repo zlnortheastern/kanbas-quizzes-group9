@@ -11,10 +11,12 @@ import { FaTrash } from "react-icons/fa";
 import { deleteAssignment, setAssignments } from "./reducer";
 import * as client from "./client";
 import { useEffect } from "react";
+import { useUserRole } from "../../Authentication/AuthProvider";
 export default function Assignments() {
   const { cid } = useParams();
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   const dispatch = useDispatch();
+  const role = useUserRole();
   const fetchAssignments = async () => {
     const assignments = await client.findAssignmentsForCourse(cid as string);
     dispatch(setAssignments(assignments));
@@ -59,7 +61,7 @@ export default function Assignments() {
   }, []);
   return (
     <div id="wd-assignments">
-      <AssignmentsControls />
+      <AssignmentsControls role={role} />
       <br />
       <br />
       <br />
@@ -69,11 +71,15 @@ export default function Assignments() {
           <BsGripVertical className="me-2 fs-3" />
           <IoMdArrowDropdown className="me-2" />
           <span className="fw-bold">ASSIGNMENTS</span>
-          <IoEllipsisVertical className="fs-4 float-end mt-1" />
-          <BsPlusLg className="float-end fs-4 me-3 mt-1 ms-1" />
-          <div className="border float-end rounded-5 border-dark px-2">
-            40% of Total{" "}
-          </div>
+          {role === "FACULTY" && (
+            <>
+              <IoEllipsisVertical className="fs-4 float-end mt-1" />
+              <BsPlusLg className="float-end fs-4 me-3 mt-1 ms-1" />
+              <div className="border float-end rounded-5 border-dark px-2">
+                40% of Total{" "}
+              </div>
+            </>
+          )}
         </div>
         <ul
           id="wd-assignment-list"
@@ -99,14 +105,16 @@ export default function Assignments() {
                     {formatDate(a.assign.due)} | {a.points}
                   </p>
                 </div>
-                <div className="ms-auto">
-                  <FaTrash
-                    className="text-danger me-2 mb-1"
-                    onClick={() => removeAssignment(a._id)}
-                  />
-                  <GreenCheckmark />
-                  <IoEllipsisVertical className="fs-4" />
-                </div>
+                {role === "FACULTY" && (
+                  <div className="ms-auto">
+                    <FaTrash
+                      className="text-danger me-2 mb-1"
+                      onClick={() => removeAssignment(a._id)}
+                    />
+                    <GreenCheckmark />
+                    <IoEllipsisVertical className="fs-4" />
+                  </div>
+                )}
               </li>
             ))}
         </ul>

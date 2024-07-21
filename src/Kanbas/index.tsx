@@ -8,11 +8,25 @@ import { Provider } from "react-redux";
 import * as client from "./Courses/client";
 import Login from "./Authentication/Login";
 import Signup from "./Authentication/Signup";
-import { AuthProvider, useAuth } from "./Authentication/AuthProvider";
+import {
+  AuthProvider,
+  useAuth,
+  useUserRole,
+} from "./Authentication/AuthProvider";
 import Account from "./Authentication/Account";
+import Registration from "./Dashboard/Registration";
 
+export interface Course {
+  _id: string;
+  name: string;
+  number: string;
+  startDate: string;
+  endDate: string;
+  description: string;
+  image: string;
+}
 export default function Kanbas() {
-  const [courses, setCourses] = useState<any[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
   const fetchCourses = async () => {
     const courses = await client.fetchAllCourses();
     setCourses(courses);
@@ -29,8 +43,8 @@ export default function Kanbas() {
     endDate: "2023-12-15",
     description: "New Description",
   });
-  const addNewCourse = async () => {
-    const newCourse = await client.createCourse(course);
+  const addNewCourse = async (userId: string) => {
+    const newCourse = await client.createCourseByFaculty(userId, course);
     setCourses([...courses, newCourse]);
   };
   const deleteCourse = async (courseId: any) => {
@@ -55,7 +69,7 @@ export default function Kanbas() {
         <div id="wd-kanbas" className="h-100">
           <div className="d-flex h-100">
             <KanbasNavigation />
-            <div className="flex-fill p-4" style={{marginLeft:"120px"}}>
+            <div className="flex-fill p-4" style={{ marginLeft: "120px" }}>
               <Routes>
                 <Route element={<RedirectLogOut />}>
                   <Route path="/" element={<Navigate to="Dashboard" />} />
@@ -73,6 +87,9 @@ export default function Kanbas() {
                       />
                     }
                   />
+                  <Route element={<RedirectRegistration />}>
+                    <Route path="Registration" element={<Registration />} />
+                  </Route>
                   <Route
                     path="Courses/:cid/*"
                     element={<Courses courses={courses} />}
@@ -90,6 +107,8 @@ export default function Kanbas() {
     </AuthProvider>
   );
 }
+
+// Protected route redirect
 const RedirectLogOut = () => {
   const user = useAuth();
   if (!user.token) return <Navigate to="Login" />;
@@ -98,5 +117,10 @@ const RedirectLogOut = () => {
 const RedirectLogIn = () => {
   const user = useAuth();
   if (user.token) return <Navigate to="Dashboard" />;
+  return <Outlet />;
+};
+const RedirectRegistration = () => {
+  const role = useUserRole();
+  if (role === "FACULTY") return <Navigate to="Dashboard" />;
   return <Outlet />;
 };
