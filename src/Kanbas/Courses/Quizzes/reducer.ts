@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface Quiz {
+export interface Quiz {
   _id: string;
   title: string;
   course: string;
+  description: string;
+  courseId: string;
   quizType: string;
   points: number;
   assignmentGroup: string;
@@ -26,10 +28,36 @@ interface Quiz {
 
 interface QuizzesState {
   quizzes: Quiz[];
+  quiz: Quiz;
 }
 
 const initialState: QuizzesState = {
   quizzes: [],
+  quiz: {
+    _id: "new",
+    title: "new quiz title",
+    course: "course name",
+    description: "new quiz description",
+    courseId: "course id",
+    quizType: "quiz",
+    points: 0,
+    assignmentGroup: "Quizzes",
+    shuffleAnswers: false,
+    timeLimit: 0,
+    multipleAttempts: false,
+    attemptLimit: 100,
+    showCorrectAnswers: "Immediately",
+    accessCode: "",
+    oneQuestionAtATime: false,
+    webcamRequired: false,
+    lockQuestionsAfterAnswering: false,
+    dueDate: "2024-08-15",
+    availableDate: "2024-05-16",
+    availableUntilDate: "2024-08-15",
+    published: false,
+    editing: false,
+    questions: [],
+  },
 };
 
 const quizzesSlice = createSlice({
@@ -63,6 +91,9 @@ const quizzesSlice = createSlice({
         q._id === quizId ? { ...q, published: !q.published } : q
       );
     },
+    setQuiz: (state, action) => {
+      state.quiz = action.payload;
+    },
   },
 });
 
@@ -73,6 +104,7 @@ export const {
   updateQuiz,
   editQuiz,
   togglePublishQuiz,
+  setQuiz,
 } = quizzesSlice.actions;
 
 export default quizzesSlice.reducer;
