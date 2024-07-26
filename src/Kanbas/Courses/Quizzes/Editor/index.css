@@ -1,0 +1,18 @@
+.nav-link.active {
+  color: black;
+}
+.nav-link {
+  color: red;
+}
+
+.centered-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.bg-color-lightgray {
+  background-color: lightgray;
+}
