@@ -31,8 +31,8 @@ export default function Account() {
 
   const fetchUser = async () => {
     const data = await client.getUser(auth.token);
-    setUpdateUser({ ...updateUser, ...data[0] });
-    setUser({ ...user, ...data[0] });
+    setUpdateUser({ ...updateUser, ...data });
+    setUser({ ...user, ...data });
   };
 
   const handleInput = (e: any) => {

@@ -31,8 +31,8 @@ export const AuthProvider = ({ children }: any) => {
       const data = await client.authUser(userInput);
       if (data) {
         setUser(data);
-        setToken(data[0]._id);
-        localStorage.setItem("user", data[0]._id);
+        setToken(data._id);
+        localStorage.setItem("user", data._id);
         return;
       }
     } catch (error: any) {
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }: any) => {
   };
   const getRole = async () => {
     const data = await client.getUser(token);
-    return data[0].role;
+    return data.role;
   }
   const logout = () => {
     setUser(null);
