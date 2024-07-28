@@ -11,6 +11,7 @@ import Quizzes from "./Quizzes";
 import QuizDetails from "./Quizzes/QuizDetails";
 import EditDetails from "./Quizzes/Editor/editDetails";
 import EditQuestions from "./Quizzes/Editor/editQuestions";
+import PeopleTable from "./People/Table";
 export default function Courses({ courses }: { courses: any[] }) {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
@@ -24,7 +25,7 @@ export default function Courses({ courses }: { courses: any[] }) {
       <hr />
       <div className="d-flex">
         <div className="d-none d-md-block">
-          <CoursesNavigation />
+          <CoursesNavigation courses={courses}/>
         </div>
         <div className="flex-fill">
           <Routes>
@@ -38,6 +39,8 @@ export default function Courses({ courses }: { courses: any[] }) {
             <Route path="Quizzes/:qid" element={<QuizDetails />} />
             <Route path="Quizzes/:qid/edit" element={<EditDetails />} />
             <Route path="Quizzes/:qid/questions" element={<EditQuestions />} />
+            <Route path="People" element={<PeopleTable />} />
+            <Route path="People/:uid" element={<PeopleTable />} />
           </Routes>
         </div>
       </div>

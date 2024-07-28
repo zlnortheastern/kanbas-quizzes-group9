@@ -11,9 +11,7 @@ export const getUser = async (userId: string) => {
 };
 export const authUser = async (userInput: any) => {
   try {
-    const response = await axios.get(
-      `${USERS_API}/auth/${userInput.username}/${userInput.password}`
-    );
+    const response = await axios.post(`${USERS_API}/signin`, userInput);
     return response.data;
   } catch (error: any) {
     if (error.response && error.response.status === 400) {
@@ -25,7 +23,7 @@ export const authUser = async (userInput: any) => {
 };
 export const createUser = async (user: any) => {
   try {
-    const response = await axios.post(USERS_API, user);
+    const response = await axios.post(`${USERS_API}/signup`, user);
     return response.data;
   } catch (error: any) {
     if (error.response && error.response.status === 400) {

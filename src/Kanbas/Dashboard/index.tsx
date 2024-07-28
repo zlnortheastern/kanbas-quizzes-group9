@@ -30,6 +30,7 @@ export default function Dashboard({
   useEffect(() => {
     fetchEnrollments(auth.token);
   }, [courses]);
+
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1>
