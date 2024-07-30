@@ -10,16 +10,20 @@ import { useState, useEffect, useRef } from "react";
 import { deleteQuiz, setQuizzes, togglePublishQuiz } from "./reducer";
 import * as client from "./client";
 import QuizContextMenu from "./QuizContextMenu";
+import { useUserRole } from "../../Authentication/AuthProvider";
 
-export default function Quizzes() {
+export default function Quizzes({ role }: { role: string }) {
   const { cid } = useParams();
   const { quizzes } = useSelector((state: any) => state.quizzesReducer);
   const dispatch = useDispatch();
   const [isCollapsed, setIsCollapsed] = useState(false);
-
   const fetchQuizzes = async () => {
     const quizzes = await client.findQuizzesForCourse(cid as string);
-    dispatch(setQuizzes(quizzes));
+    if (role === "FACULTY") {
+      dispatch(setQuizzes(quizzes));
+    } else {
+      dispatch(setQuizzes(quizzes.filter((q: any) => q.published)));
+    }
   };
   const handleToggle = () => {
     setIsCollapsed(!isCollapsed);
@@ -59,7 +63,6 @@ export default function Quizzes() {
     const availableDate = new Date(quiz.availableDate);
     const dueDate = new Date(quiz.dueDate);
     const availableUntilDate = new Date(quiz.availableUntilDate);
-
     if (currentDate > availableUntilDate) {
       return "Closed";
     } else if (
@@ -80,7 +83,7 @@ export default function Quizzes() {
 
   return (
     <div id="wd-quizzes">
-      <QuizzesControls />
+      <QuizzesControls userRole={role} />
       <br />
       <br />
       <li className="wd-quizzes list-group-item p-0 mb-5 fs-5 border-gray">
@@ -118,26 +121,30 @@ export default function Quizzes() {
                     </p>
                   </div>
                   <div className="ms-auto position-relative">
-                    <span className="p-3">
-                      {q.published ? (
-                        <span>
-                          <GreenCheckmark />
-                        </span>
-                      ) : (
-                        <span>🚫</span>
-                      )}
-                    </span>
-                    <div className="dropdown d-inline me-1 float-end">
-                      <button
-                        id="wd-publish-all-btn"
-                        className="btn p-0 mb-1 btn-transparent"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                      >
-                        <IoEllipsisVertical className="fs-4 context-menu-button" />
-                      </button>
-                      <QuizContextMenu quizId={q._id}/>
-                    </div>
+                    {role === "FACULTY" && (
+                      <span className="p-3">
+                        {q.published ? (
+                          <span>
+                            <GreenCheckmark />
+                          </span>
+                        ) : (
+                          <span>🚫</span>
+                        )}
+                      </span>
+                    )}
+                    {role === "FACULTY" && (
+                      <div className="dropdown d-inline me-1 float-end">
+                        <button
+                          id="wd-publish-all-btn"
+                          className="btn p-0 mb-1 btn-transparent"
+                          type="button"
+                          data-bs-toggle="dropdown"
+                        >
+                          <IoEllipsisVertical className="fs-4 context-menu-button" />
+                        </button>
+                        <QuizContextMenu quizId={q._id} />
+                      </div>
+                    )}
                   </div>
                 </li>
               ))}

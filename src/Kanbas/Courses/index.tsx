@@ -12,10 +12,12 @@ import QuizDetails from "./Quizzes/QuizDetails";
 import EditDetails from "./Quizzes/Editor/editDetails";
 import EditQuestions from "./Quizzes/Editor/editQuestions";
 import PeopleTable from "./People/Table";
+import { useUserRole } from "../Authentication/AuthProvider";
 export default function Courses({ courses }: { courses: any[] }) {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
   const { pathname } = useLocation();
+  const role = useUserRole();
   return (
     <div id="wd-courses">
       <h2 className="text-danger">
@@ -35,7 +37,7 @@ export default function Courses({ courses }: { courses: any[] }) {
             <Route path="Assignments" element={<Assignments />} />
             <Route path="Assignments/:aid" element={<AssignmentEditor />} />
             <Route path="Grades" element={<Grades />} />
-            <Route path="Quizzes" element={<Quizzes />} />
+            <Route path="Quizzes" element={<Quizzes role={role}/>} />
             <Route path="Quizzes/:qid" element={<QuizDetails />} />
             <Route path="Quizzes/:qid/edit" element={<EditDetails />} />
             <Route path="Quizzes/:qid/questions" element={<EditQuestions />} />
