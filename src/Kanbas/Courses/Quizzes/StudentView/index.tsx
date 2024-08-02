@@ -6,6 +6,7 @@ import * as client from "../client";
 import { formatDate } from "../../../util";
 import { useAuth } from "../../../Authentication/AuthProvider";
 import QuizStudentControls from "./QuizStudentControls";
+import StudentAnswerView from "./StudentAnswerView";
 export default function QuizStudent() {
   const [questions, setQuestions] = useState<Questions>();
   const [answers, setAnswers] = useState<Answers[]>();
@@ -24,6 +25,13 @@ export default function QuizStudent() {
 
   const fetchAnswers = async () => {
     const answers = qid ? await client.getAnswersByUser(qid, auth.token) : [];
+    if (answers) {
+      answers.sort((a: Answers, b: Answers) => {
+        const subTimeA = new Date(a.submit_time);
+        const subTimeB = new Date(b.submit_time);
+        return subTimeA.getTime() - subTimeB.getTime();
+      });
+    }
     setAnswers(answers);
   };
 
@@ -37,6 +45,7 @@ export default function QuizStudent() {
   const availableTime = new Date(quiz?.availableDate as string);
   const untilTime = new Date(quiz?.availableUntilDate as string);
   const currentTime = new Date();
+
   if (!quiz && !questions) return <></>;
   return (
     <div className="row-fluid">
@@ -77,6 +86,7 @@ export default function QuizStudent() {
           answered={!!answers && answers.length > 0}
           canAnswer={!!quiz && !!answers && answers.length < quiz.attemptLimit}
         />
+        {answers && <StudentAnswerView answers={answers}/>}
       </div>
     </div>
   );

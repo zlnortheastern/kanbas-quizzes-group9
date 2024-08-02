@@ -28,12 +28,14 @@ export default function QuizStudentControls({
           </>
         )}
         <div className="text-center">
-          <Link
-            to={`preview`}
-            className="btn btn-danger font-color-white rounded-1"
-          >
-            {answered ? "Take the Quiz Again" : "Take the Quiz"}
-          </Link>
+          {canAnswer && (
+            <Link
+              to={`preview`}
+              className="btn btn-danger font-color-white rounded-1"
+            >
+              {answered ? "Take the Quiz Again" : "Take the Quiz"}
+            </Link>
+          )}
         </div>
       </div>
     );
