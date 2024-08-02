@@ -1,30 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-export interface Quiz {
-  _id: string;
-  title: string;
-  course: string;
-  description: string;
-  courseId: string;
-  quizType: string;
-  points: number;
-  assignmentGroup: string;
-  shuffleAnswers: boolean;
-  timeLimit: number;
-  multipleAttempts: boolean;
-  attemptLimit: number;
-  showCorrectAnswers: string;
-  accessCode: string;
-  oneQuestionAtATime: boolean;
-  webcamRequired: boolean;
-  lockQuestionsAfterAnswering: boolean;
-  dueDate: string;
-  availableDate: string;
-  availableUntilDate: string;
-  published: boolean;
-  editing?: boolean;
-  questions?: any[];
-}
+import { Quiz } from "./interface";
 
 interface QuizzesState {
   quizzes: Quiz[];
@@ -36,9 +11,7 @@ const initialState: QuizzesState = {
   quiz: {
     _id: "new",
     title: "new quiz title",
-    course: "course name",
     description: "new quiz description",
-    courseId: "course id",
     quizType: "quiz",
     points: 0,
     assignmentGroup: "Quizzes",
@@ -54,9 +27,9 @@ const initialState: QuizzesState = {
     dueDate: "2024-08-15",
     availableDate: "2024-05-16",
     availableUntilDate: "2024-08-15",
+    lastModified: "",
+    course: "course id",
     published: false,
-    editing: false,
-    questions: [],
   },
 };
 
