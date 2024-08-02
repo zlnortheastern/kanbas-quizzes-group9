@@ -12,10 +12,13 @@ import QuizDetails from "./Quizzes/QuizDetails";
 import EditDetails from "./Quizzes/Editor/editDetails";
 import EditQuestions from "./Quizzes/Editor/editQuestions";
 import PeopleTable from "./People/Table";
+import { useUserRole } from "../Authentication/AuthProvider";
+import QuizStudent from "./Quizzes/StudentView";
 export default function Courses({ courses }: { courses: any[] }) {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
   const { pathname } = useLocation();
+  const role = useUserRole();
   return (
     <div id="wd-courses">
       <h2 className="text-danger">
@@ -25,7 +28,7 @@ export default function Courses({ courses }: { courses: any[] }) {
       <hr />
       <div className="d-flex">
         <div className="d-none d-md-block">
-          <CoursesNavigation courses={courses}/>
+          <CoursesNavigation courses={courses} />
         </div>
         <div className="flex-fill">
           <Routes>
@@ -35,8 +38,11 @@ export default function Courses({ courses }: { courses: any[] }) {
             <Route path="Assignments" element={<Assignments />} />
             <Route path="Assignments/:aid" element={<AssignmentEditor />} />
             <Route path="Grades" element={<Grades />} />
-            <Route path="Quizzes" element={<Quizzes />} />
-            <Route path="Quizzes/:qid" element={<QuizDetails />} />
+            <Route path="Quizzes" element={<Quizzes role={role} />} />
+            <Route
+              path="Quizzes/:qid"
+              element={role === "FACULTY" ? <QuizDetails /> : <QuizStudent />}
+            />
             <Route path="Quizzes/:qid/edit" element={<EditDetails />} />
             <Route path="Quizzes/:qid/questions" element={<EditQuestions />} />
             <Route path="People" element={<PeopleTable />} />
