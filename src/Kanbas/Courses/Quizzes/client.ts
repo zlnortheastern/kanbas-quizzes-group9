@@ -1,8 +1,11 @@
 import axios from "axios";
 
-const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER  || "http://localhost:4000";
+const REMOTE_SERVER =
+  process.env.REACT_APP_REMOTE_SERVER || "http://localhost:4000";
 const COURSES_API = `${REMOTE_SERVER}/api/courses`;
 const QUIZZES_API = `${REMOTE_SERVER}/api/quizzes`;
+const QUESTIONS_API = `${REMOTE_SERVER}/api/questions`;
+const ANSWER_API = `${REMOTE_SERVER}/api/answers`;
 
 export const updateQuiz = async (quiz: any) => {
   const response = await axios.put(`${QUIZZES_API}/${quiz._id}`, quiz);
@@ -26,5 +29,20 @@ export const createQuiz = async (courseId: string, quiz: any) => {
 
 export const getQuizById = async (id: string) => {
   const response = await axios.get(`${QUIZZES_API}/${id}`);
+  return response.data;
+};
+
+export const getQuestionsByQuiz = async (qid: string) => {
+  const response = await axios.get(`${QUIZZES_API}/${qid}/questions`);
+  return response.data;
+};
+export const getQuestions = async (qid: string) => {
+  const response = await axios.get(`${QUESTIONS_API}/${qid}`);
+  return response.data;
+};
+export const getAnswersByUser = async (qid: string, uid: string) => {
+  const response = await axios.get(
+    `${QUIZZES_API}/${qid}/users/${uid}/answers`
+  );
   return response.data;
 };

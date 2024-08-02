@@ -60,4 +60,6 @@ export interface Answers {
   score: number;
   total: number;
   answers: Answer[];
+  submit_time: string;
+  time_used: number;
 }

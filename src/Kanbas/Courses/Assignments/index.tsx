@@ -12,6 +12,7 @@ import { deleteAssignment, setAssignments } from "./reducer";
 import * as client from "./client";
 import { useEffect } from "react";
 import { useUserRole } from "../../Authentication/AuthProvider";
+import { formatDate } from "../../util";
 export default function Assignments() {
   const { cid } = useParams();
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
@@ -24,36 +25,6 @@ export default function Assignments() {
   const removeAssignment = async (assignmentId: string) => {
     await client.deleteAssignment(assignmentId);
     dispatch(deleteAssignment(assignmentId));
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-
-    const month = monthNames[date.getMonth()];
-    const day = date.getDate();
-
-    let hours = date.getHours();
-    const minutes = date.getMinutes();
-    const ampm = hours >= 12 ? "pm" : "am";
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    const minutesStr = minutes < 10 ? "0" + minutes : minutes;
-
-    return `${month} ${day} at ${hours}:${minutesStr}${ampm}`;
   };
 
   useEffect(() => {

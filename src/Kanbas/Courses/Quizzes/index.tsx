@@ -11,6 +11,7 @@ import { deleteQuiz, setQuizzes, togglePublishQuiz } from "./reducer";
 import * as client from "./client";
 import QuizContextMenu from "./QuizContextMenu";
 import { useUserRole } from "../../Authentication/AuthProvider";
+import { formatDate } from "../../util";
 
 export default function Quizzes({ role }: { role: string }) {
   const { cid } = useParams();
@@ -29,34 +30,6 @@ export default function Quizzes({ role }: { role: string }) {
     setIsCollapsed(!isCollapsed);
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    const month = monthNames[date.getMonth()];
-    const day = date.getDate();
-
-    let hours = date.getHours();
-    const minutes = date.getMinutes();
-    const ampm = hours >= 12 ? "pm" : "am";
-    hours = hours % 12;
-    hours = hours ? hours : 12;
-    const minutesStr = minutes < 10 ? "0" + minutes : minutes;
-
-    return `${month} ${day} at ${hours}:${minutesStr}${ampm}`;
-  };
 
   const getAvailability = (quiz: any) => {
     const currentDate = new Date();
