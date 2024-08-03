@@ -14,6 +14,7 @@ import EditQuestions from "./Quizzes/Editor/editQuestions";
 import PeopleTable from "./People/Table";
 import { useUserRole } from "../Authentication/AuthProvider";
 import QuizStudent from "./Quizzes/StudentView";
+import ViewAttempt from "./Quizzes/StudentView/ViewAttempt";
 export default function Courses({ courses }: { courses: any[] }) {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
@@ -45,6 +46,7 @@ export default function Courses({ courses }: { courses: any[] }) {
             />
             <Route path="Quizzes/:qid/edit" element={<EditDetails />} />
             <Route path="Quizzes/:qid/questions" element={<EditQuestions />} />
+            <Route path="Quizzes/:qid/Answer/:aid" element={<ViewAttempt />} />
             <Route path="People" element={<PeopleTable />} />
             <Route path="People/:uid" element={<PeopleTable />} />
           </Routes>

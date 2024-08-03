@@ -1,3 +1,5 @@
+import { Answers } from "./Courses/Quizzes/interface";
+
 export const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   const monthNames = [
@@ -36,4 +38,12 @@ export const formatTime = (totalSeconds: number): string => {
   const paddedSeconds = String(seconds).padStart(2, "0");
 
   return `${paddedMinutes}:${paddedSeconds}`;
+};
+
+export const getHighestScore = (answers: Answers[]) => {
+  let result = 0;
+  answers.forEach((answer) => {
+    if (answer.score > result) result = answer.score;
+  });
+  return result;
 };
