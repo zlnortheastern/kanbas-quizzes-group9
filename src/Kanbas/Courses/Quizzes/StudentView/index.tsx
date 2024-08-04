@@ -93,8 +93,8 @@ export default function QuizStudent() {
             questions={questions}
             showQuestions={quiz?.showCorrectAnswers !== ShowAnswerType.never}
             showAnswers={
-              quiz?.showCorrectAnswers === ShowAnswerType.after_due_date &&
-              currentTime < dueDateTime
+              quiz?.showCorrectAnswers !== ShowAnswerType.after_due_date &&
+              currentTime > dueDateTime
             }
           />
         )}

@@ -12,8 +12,17 @@ export default function AnswerHistory({
   questions: Question[];
   showCorrect: boolean;
 }) {
+  if (!answer || !questions) return <></>;
   return (
     <div>
+      {!showCorrect && (
+        <div
+          id="wd-todo-error-messag"
+          className="text-center alert alert-danger m-3 p-2"
+        >
+          Correct answers are hidden.
+        </div>
+      )}
       <div id="answer-information">
         <div>
           Score for this quiz: <span className="fw-bold">{answer.score}</span>{" "}
@@ -24,7 +33,10 @@ export default function AnswerHistory({
           This attempt took {formatTime(answer.time_used)}.
         </div>
       </div>
-      <div id="answer-board" style={{ marginLeft: "110px", marginRight:"110px" }}>
+      <div
+        id="answer-board"
+        style={{ marginLeft: "110px", marginRight: "110px" }}
+      >
         {questions.map((question, index) => (
           <div key={index} className="mx-3 mb-4 border border-secondary">
             <div

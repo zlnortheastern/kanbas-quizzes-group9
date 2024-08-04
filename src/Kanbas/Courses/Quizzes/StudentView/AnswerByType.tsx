@@ -17,12 +17,15 @@ export default function AnswerByType({
     const correct = question.blank?.includes(answer.blank as string);
     return (
       <div className="p-3" style={{ fontSize: "0.88rem" }}>
-        <AnswerLabel
-          labelType={correct ? "correct_answer" : "incorrect_answer"}
-        />
+        {showCorrect && (
+          <AnswerLabel
+            labelType={correct ? "correct_answer" : "incorrect_answer"}
+          />
+        )}
+
         <div
           className={`ms-2 ${
-            !correct && "border border-2 border-danger rounded-2"
+            showCorrect && !correct && "border border-2 border-danger rounded-2"
           }`}
         >
           <input
@@ -58,15 +61,17 @@ export default function AnswerByType({
       <div className="mx-3 mb-4" style={{ fontSize: "0.88rem" }}>
         {question.choices?.map((choice, index) => (
           <div>
-            {index === answer.choice && (
+            {showCorrect && index === answer.choice && (
               <AnswerLabel
                 labelType={correct ? "correct_answer" : "incorrect_answer"}
               />
             )}
-            {!correct && choice.correct && <AnswerLabel labelType="answer" />}
+            {showCorrect && !correct && choice.correct && (
+              <AnswerLabel labelType="answer" />
+            )}
             <div
               className={`ms-2 ${
-                !correct && index === answer.choice
+                showCorrect && !correct && index === answer.choice
                   ? "border border-2 border-danger rounded-2"
                   : "border-top"
               }`}
@@ -91,17 +96,17 @@ export default function AnswerByType({
     return (
       <div className="mx-3 mb-4" style={{ fontSize: "0.88rem" }}>
         <div>
-          {answer.true_or_false && (
+          {showCorrect && answer.true_or_false && (
             <AnswerLabel
               labelType={correct ? "correct_answer" : "incorrect_answer"}
             />
           )}
-          {!correct && !answer.true_or_false && (
+          {showCorrect && !correct && !answer.true_or_false && (
             <AnswerLabel labelType="answer" />
           )}
           <div
             className={`ms-2 ${
-              !correct && answer.true_or_false
+              showCorrect && !correct && answer.true_or_false
                 ? "border border-2 border-danger rounded-2"
                 : "border-top"
             }`}
@@ -120,17 +125,17 @@ export default function AnswerByType({
         </div>
 
         <div>
-          {!answer.true_or_false && (
+          {showCorrect && !answer.true_or_false && (
             <AnswerLabel
               labelType={correct ? "correct_answer" : "incorrect_answer"}
             />
           )}
-          {!correct && answer.true_or_false && (
+          {showCorrect && !correct && answer.true_or_false && (
             <AnswerLabel labelType="answer" />
           )}
           <div
             className={`ms-2 ${
-              !correct && !answer.true_or_false
+              showCorrect && !correct && !answer.true_or_false
                 ? "border border-2 border-danger rounded-2"
                 : "border-top"
             }`}
