@@ -136,12 +136,16 @@ export default function EditQuestions() {
       </div>
       <br />
 
-      <div style={{ marginLeft: "110px", marginRight: "110px" }}>
+      <div style={{ marginLeft: "150px", marginRight: "150px" }}>
         {questions.map((question, index) => (
-          <div key={index} className="mx-3 mb-4 border border-secondary">
+          <div
+            key={index}
+            className="mx-3 mb-4 border border-secondary"
+            style={{ padding: "0", position: "relative", width: "100%" }}
+          >
             <div
               className="p-3 border-bottom border-secondary"
-              style={{ backgroundColor: "#f5f5f5" }}
+              style={{ backgroundColor: "#f5f5f5", width: "100%" }}
             >
               <div className="float-end font-color-secondary">
                 {question.points} pts
@@ -149,9 +153,20 @@ export default function EditQuestions() {
               <div className="fw-bold">Question {index + 1}</div>
             </div>
 
-            <div>
+            <div style={{ width: "100%" }}>
               <div id="question-description" className="p-3 my-3">
                 {question.question}
+                <button
+                  className="btn btn-danger btn-sm float-end"
+                  onClick={() => handleNavigate(question._id)}
+                  style={{
+                    position: "absolute",
+                    right: "20px",
+                    bottom: "15px",
+                  }}
+                >
+                  Edit
+                </button>
               </div>
             </div>
           </div>
