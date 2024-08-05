@@ -1,0 +1,101 @@
+.answer_arrow {
+  background-image: url(https://du11hjcvx0uqb.cloudfront.net/dist/images/answers_sprite-0d764f2477.png);
+  background-repeat: repeat-x;
+  display: inline-block;
+  font-size: 14px;
+  font-size: 0.875rem;
+  font-weight: bold;
+  line-height: 27px;
+  min-width: 124px;
+  padding: 0 8px;
+  position: absolute;
+  text-align: center;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
+}
+.answer_arrow.correct_answer {
+  background-position: left -34px;
+  color: #fff;
+}
+
+.answer_arrow.correct_answer::before {
+  background-image: url(https://du11hjcvx0uqb.cloudfront.net/dist/images/answers_sprite-0d764f2477.png);
+  background-repeat: no-repeat;
+  content: " ";
+  height: 27px;
+  position: absolute;
+  top: 0;
+  left: -3px;
+  width: 3px;
+  background-position: top left;
+}
+
+.answer_arrow.correct_answer::after {
+  background-image: url(https://du11hjcvx0uqb.cloudfront.net/dist/images/answers_sprite-0d764f2477.png);
+  background-repeat: no-repeat;
+  content: " ";
+  height: 27px;
+  position: absolute;
+  top: 0;
+  right: -11px;
+  width: 11px;
+  background-position: -12px top;
+}
+
+.answer_arrow.incorrect_answer {
+  background-position: left -62px;
+  color: #fff;
+}
+
+.answer_arrow.incorrect_answer::before {
+  background-image: url(https://du11hjcvx0uqb.cloudfront.net/dist/images/answers_sprite-0d764f2477.png);
+  background-repeat: no-repeat;
+  content: " ";
+  height: 27px;
+  position: absolute;
+  top: 0;
+  left: -3px;
+  width: 3px;
+  background-position: -4px top;
+}
+
+.answer_arrow.incorrect_answer::after {
+  background-image: url(https://du11hjcvx0uqb.cloudfront.net/dist/images/answers_sprite-0d764f2477.png);
+  background-repeat: no-repeat;
+  content: " ";
+  height: 27px;
+  position: absolute;
+  top: 0;
+  right: -11px;
+  width: 11px;
+  background-position: -24px top;
+}
+
+.answer_arrow.answer {
+  background-position: left -90px;
+  color: #333;
+  text-shadow: 0 -1px 0;
+}
+
+.answer_arrow.answer::before {
+  background-image: url(https://du11hjcvx0uqb.cloudfront.net/dist/images/answers_sprite-0d764f2477.png);
+  background-repeat: no-repeat;
+  content: " ";
+  height: 27px;
+  position: absolute;
+  top: 0;
+  left: -3px;
+  width: 3px;
+  background-position: -8px top;
+}
+
+.answer_arrow.answer::after {
+  background-image: url(https://du11hjcvx0uqb.cloudfront.net/dist/images/answers_sprite-0d764f2477.png);
+  background-repeat: no-repeat;
+  content: " ";
+  height: 27px;
+  position: absolute;
+  top: 0;
+  right: -11px;
+  width: 11px;
+  background-position: -36px top;
+}
