@@ -417,8 +417,9 @@ export default function EditDetails() {
                   dispatch(setQuiz({ ...quiz, showCorrectAnswers: newValue }));
                 }}
               >
-                <option value="Immediately">Immediately</option>
-                <option value="After due date">After due date</option>
+                <option value="immediately">immediately</option>
+                <option value="after_due_date">after_due_date</option>
+                <option value="never">never</option>
               </select>
             </li>
             <li className="list-group-item border-0">
@@ -565,22 +566,22 @@ export default function EditDetails() {
       </div>
       <hr />
       <br />
-      <div>
+      <div className="button-container">
         <button
           onClick={() => handleSave(false)}
-          className="btn btn-danger ms-2 float-end"
+          className="btn btn-danger ms-2 mb-4 float-end"
         >
           Save
         </button>
         <button
           onClick={() => handleSave(true)}
-          className="btn btn-success ms-2 float-end"
+          className="btn btn-success ms-2 mb-4 float-end"
         >
           Save & Publish
         </button>
         <Link
           to={`/Kanbas/Courses/${cid}/Quizzes`}
-          className="btn btn-secondary float-end"
+          className="btn btn-secondary ms-2 mb-4 float-end"
         >
           Cancel
         </Link>
