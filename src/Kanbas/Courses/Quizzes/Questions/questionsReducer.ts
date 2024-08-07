@@ -2,16 +2,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Question, Questions, QuestionType } from "../interface";
 
 export interface RootState {
-  questions: Questions;
+  questions: Question[];
   question: Question;
 }
 
 const initialState: RootState = {
-  questions: {
-    _id: "",
-    quiz: "",
-    questions: [],
-  },
+  questions: [],
+
   question: {
     _id: "",
     quiz: "",
@@ -29,34 +26,43 @@ const questionsSlice = createSlice({
   name: "questions",
   initialState,
   reducers: {
-    setQuestions(state, action: PayloadAction<Questions>) {
+    setQuestions: (state, action) => {
       state.questions = action.payload;
     },
-    setQuestion(state, action: PayloadAction<Question>) {
-      state.question = action.payload;
+
+    setQuestion: (state, action) => {
+      state.question = { ...action.payload };
+      if (action.payload.type) {
+        state.question.type = action.payload.type;
+      }
     },
-    addQuestion(state, action: PayloadAction<Question>) {
-      state.questions.questions.push(action.payload);
+
+    addQuestion: (state, action) => {
+      state.questions = [action.payload, ...state.questions];
     },
-    deleteQuestion(state, action: PayloadAction<number>) {
-      state.questions.questions.splice(action.payload, 1);
+    deleteQuestion: (state, action) => {
+      state.questions = state.questions.filter(
+        (question) => question._id !== action.payload
+      );
     },
-    updateQuestion(
-      state,
-      action: PayloadAction<{ index: number; question: Question }>
-    ) {
-      const { index, question } = action.payload;
-      state.questions.questions[index] = question;
+    updateQuestion: (state, action) => {
+      state.questions = state.questions.map((question) => {
+        if (question._id === action.payload._id) {
+          return action.payload;
+        } else {
+          return question;
+        }
+      });
     },
   },
 });
 
 export const {
   setQuestions,
-  setQuestion,
   addQuestion,
   deleteQuestion,
   updateQuestion,
+  setQuestion,
 } = questionsSlice.actions;
 
 export default questionsSlice.reducer;
