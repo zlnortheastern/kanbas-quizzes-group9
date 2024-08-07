@@ -49,56 +49,35 @@ export const getQuestions = async (qid: string) => {
   return response.data;
 };
 
-export const deleteQuestion = async (questionId: string) => {
-  const response = await axios.delete(`${QUESTIONS_API}/${questionId}`);
+export const getQuestionById = async (questionId: string) => {
+  const response = await axios.get(`${QUESTIONS_API}/${questionId}`);
   return response.data;
 };
 
-export const createQuestion = async (quizId: string, question: any) => {
+export const addQuestionToQuiz = async (quizId: string, newQuestion: any) => {
   const response = await axios.post(
     `${QUIZZES_API}/${quizId}/questions`,
-    question
+    newQuestion
   );
   return response.data;
 };
 
 export const updateQuestion = async (quizId: string, question: any) => {
   const response = await axios.put(
-    `${QUESTIONS_API}/${question._id}`,
+    `${QUIZZES_API}/${quizId}/questions/${question._id}`,
     question
   );
   return response.data;
 };
 
-export const addQuestionToSet = async (
-  questionsId: string,
-  newQuestion: any
-) => {
-  const response = await axios.post(
-    `${QUESTIONS_API}/${questionsId}/new`,
-    newQuestion
-  );
+export const deleteQuestion = async (questionId: any) => {
+  const response = await axios.delete(`${QUESTIONS_API}/${questionId}`);
   return response.data;
 };
 
-export const updateQuestionInSet = async (
-  questionsId: string,
-  questionIndex: number,
-  updatedQuestion: any
-) => {
-  const response = await axios.put(
-    `${QUESTIONS_API}/${questionsId}/${questionIndex}`,
-    updatedQuestion
-  );
-  return response.data;
-};
-
-export const removeQuestionFromSet = async (
-  questionsId: string,
-  questionIndex: number
-) => {
-  const response = await axios.delete(
-    `${QUESTIONS_API}/${questionsId}/${questionIndex}`
+export const findChoicesForQuestion = async (questionId: any) => {
+  const response = await axios.get(
+    `${QUIZZES_API}/${questionId}/questions/choices`
   );
   return response.data;
 };

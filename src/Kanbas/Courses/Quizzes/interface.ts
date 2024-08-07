@@ -40,6 +40,7 @@ export interface Choice {
 }
 export interface Question {
   _id: string;
+  quiz: string;
   type: QuestionType;
   title: string;
   points: number;
@@ -48,11 +49,13 @@ export interface Question {
   choices?: Choice[];
   blank?: string[];
 }
+
 export interface Questions {
   _id: string;
   quiz: string;
   questions: Question[];
 }
+
 export interface Answer {
   type: QuestionType;
   score: number;

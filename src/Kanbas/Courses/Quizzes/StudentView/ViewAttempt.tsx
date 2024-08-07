@@ -62,7 +62,7 @@ export default function ViewAttempt() {
     displayQuestion = false;
   }
 
-  if (!quiz || !questions || !answers ) return <></>;
+  if (!quiz || !questions || !answers) return <></>;
   return (
     <div className="row">
       <div className="col-9">
