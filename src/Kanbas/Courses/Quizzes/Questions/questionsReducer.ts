@@ -26,26 +26,26 @@ const questionsSlice = createSlice({
   name: "questions",
   initialState,
   reducers: {
-    setQuestions: (state, action) => {
+    setQuestions: (state, action: PayloadAction<Question[]>) => {
       state.questions = action.payload;
     },
 
-    setQuestion: (state, action) => {
+    setQuestion: (state, action: PayloadAction<Question>) => {
       state.question = { ...action.payload };
       if (action.payload.type) {
         state.question.type = action.payload.type;
       }
     },
 
-    addQuestion: (state, action) => {
+    addQuestion: (state, action: PayloadAction<Question>) => {
       state.questions = [action.payload, ...state.questions];
     },
-    deleteQuestion: (state, action) => {
+    deleteQuestion: (state, action: PayloadAction<string>) => {
       state.questions = state.questions.filter(
         (question) => question._id !== action.payload
       );
     },
-    updateQuestion: (state, action) => {
+    updateQuestion: (state, action: PayloadAction<Question>) => {
       state.questions = state.questions.map((question) => {
         if (question._id === action.payload._id) {
           return action.payload;
