@@ -28,3 +28,18 @@ export const getQuizById = async (id: string) => {
   const response = await axios.get(`${QUIZZES_API}/${id}`);
   return response.data;
 };
+
+export const getQuestionsByQuizId = async (quizId: string) => {
+  const response = await axios.get(`${QUIZZES_API}/${quizId}/questions`);
+  return response.data;
+};
+
+export const getAnswersByQuizAndUser = async (quizId: string, userId: string) => {
+  const response = await axios.get(`${QUIZZES_API}/${quizId}/users/${userId}/answers`);
+  return response.data;
+};
+
+export const submitQuizAnswers = async (quizId: string, userId: string, answerSet: any) => {
+  const response = await axios.post(`${QUIZZES_API}/${quizId}/users/${userId}/answers`, answerSet);
+  return response.data;
+};

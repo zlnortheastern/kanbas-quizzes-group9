@@ -50,7 +50,7 @@ export interface Answer {
   type: QuestionType;
   score: number;
   true_or_false?: boolean;
-  choices?: number;
+  choice?: number;
   blank?: string;
 }
 export interface Answers {
