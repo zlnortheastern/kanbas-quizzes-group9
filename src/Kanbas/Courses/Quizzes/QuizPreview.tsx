@@ -1,24 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Quiz, Question, Answer, Choice, QuestionType } from './interface'; // 引用已定义的接口
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Quiz, Question, Answer, Choice, QuestionType } from './interface'; 
 import * as client from "./client";
 import { useAuth } from '../../Authentication/AuthProvider';
-export default function QuizPreview() {
-    const { qid } = useParams<{ qid: string }>();
-    const { user } = useAuth();
-    const userId = user?._id;
-    if(userId){
-        console.log("userId: " + userId);
-    } else {
-        console.log("userId not existed: " + userId);
-    }
+import { CgDanger } from "react-icons/cg";
+import { RiPencilLine } from "react-icons/ri";
+import { FaCaretLeft, FaCaretRight, FaCheck } from "react-icons/fa6";
+import { LiaQuestionCircle } from "react-icons/lia";
+import { formatDate, formatTime } from "../../util";  
 
-    
+export default function QuizPreview() {
+    const { cid, qid } = useParams();
+    const auth  = useAuth();
+    const userId = auth.token;
     const [quiz, setQuiz] = useState<Quiz | null>(null);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [answers, setAnswers] = useState<Answer[]>([]);
     const [timeElapsed, setTimeElapsed] = useState(0);
+    const [startTime, setStartTime] = useState<string>('');
+    const [isHidden, setIsHidden] = useState(false);
+
+    const toggleVisibility = () => {
+      setIsHidden(!isHidden);
+    };
+    
+    const now = new Date();
+    const formattedTime = formatDate(now.toISOString());
+
     const fetchQuiz = async () => {
       if (qid) {
         const quizData = await client.getQuizById(qid);
@@ -28,18 +37,28 @@ export default function QuizPreview() {
 
     const fetchQuestions = async () => {
       if (qid) {
-        const questionsData = await client.getQuestionsByQuizId(qid);
-        setQuestions(questionsData.questions);
-        const initialAnswers = questionsData.questions.map((question: Question) => ({
-          type: question.type,
-          score: 0,
-          true_or_false: undefined,
-          choice: -1,
-          blank: "",
-        }));
-        setAnswers(initialAnswers);
+        try {
+          const questionsData = await client.getQuestionsByQuiz(qid);
+          setQuestions(questionsData.questions);
+          const initialAnswers = questionsData.questions.map((question: Question) => ({
+            type: question.type,
+            score: 0,
+            true_or_false: undefined,
+            choice: -1,
+            blank: "",
+          }));
+          setAnswers(initialAnswers);
+        } catch (error: any) {
+          if (error.response && error.response.status === 404) {
+            console.error('Questions not found');
+            setQuestions([]); 
+          } else {
+            console.error('An error occurred while fetching questions:', error);
+          }
+        }
       }
     };
+    
     useEffect(() => {
         if (!qid || !userId) {
             console.error('Quiz ID or User ID is undefined');
@@ -48,6 +67,7 @@ export default function QuizPreview() {
 
         fetchQuiz();
         fetchQuestions();
+        setStartTime(formattedTime);
       
         const timer = setInterval(() => {
             setTimeElapsed(prev => prev + 1);
@@ -96,94 +116,165 @@ export default function QuizPreview() {
             time_used: timeElapsed,
         };
         try {
-            await client.submitQuizAnswers(qid, userId, answerSet);
+            const response =  await client.submitQuizAnswers(qid, userId, answerSet);
             console.log('Quiz submitted');
         } catch (error) {
             console.error('Error submitting quiz:', error);
         }
     };
 
+    const minutes = Math.floor(timeElapsed / 60);
+    const seconds = timeElapsed % 60;
+
+
+    const isQuestionAnswered = (answer: Answer) => {
+        if (answer.type === QuestionType.trueOrFalse) {
+            return answer.true_or_false !== undefined;
+        }
+        if (answer.type === QuestionType.multipleChoice) {
+            return answer.choice !== -1;
+        }
+        if (answer.type === QuestionType.fillInBlank) {
+            return answer.blank !== "";
+        }
+        return false;
+    };
+
     return (
         <div className="container quiz-preview">
             <div className="row">
                 <div className="col-md-8">
-                    <h2>{quiz.title}</h2>
-                    <div className="alert alert-danger">This is a preview of the published version of the quiz</div>
-                    <p>Started: Jul 26 at 11:14pm</p>
-                    <h5>Quiz Instructions</h5>
+                    <h2 className="fw-bold my-3">{quiz.title}</h2>
+                    <div className="alert alert-danger d-flex align-items-center">
+                        <CgDanger className="me-3" style={{ fontSize: '1.5em' }} />
+                        This is a preview of the published version of the quiz
+                    </div>
+                    <p>Started: {startTime}</p>
+                    <h2 className='fw-bold my-2'>Quiz Instructions</h2>
                     {quiz.description && <p>{quiz.description}</p>}
-                    <br />
+                    <hr />
                     {questions.length > 0 && (
-                      <div className="question">
-                        <h3>Question {currentQuestionIndex + 1}</h3>
-                        <p>{currentQuestion.question}</p>
-                        {/* 根据问题类型渲染输入框 */}
-                        {currentQuestion.type === 'TRUE_OR_FALSE' && (
-                            <div>
-                                <div className="form-check">
-                                    <input
-                                        className="form-check-input"
-                                        type="radio"
-                                        name={`trueOrFalse-${currentQuestionIndex}`}
-                                        checked={answers[currentQuestionIndex]?.true_or_false === true}
-                                        onChange={() => handleAnswerChange(currentQuestionIndex, { type: QuestionType.trueOrFalse, true_or_false: true })}
-                                    />
-                                    <label className="form-check-label">True</label>
+                      <div className="question card">
+                        <div className="card-header d-flex justify-content-between" style={{ backgroundColor: "#f5f5f5" }}>
+                            <div className="fw-bold my-1">Question {currentQuestionIndex + 1}</div>
+                            <div className="my-1 font-color-secondary">{currentQuestion.points} pts</div>
+                        </div>
+                        <div className="card-body">
+                          <p>{currentQuestion.question}</p>
+                          
+                          {currentQuestion.type === 'TRUE_OR_FALSE' && (
+                              <div>
+                                  <div className="form-check border-top py-2">
+                                      <input
+                                          className="form-check-input"
+                                          type="radio"
+                                          name={`trueOrFalse-${currentQuestionIndex}`}
+                                          checked={answers[currentQuestionIndex]?.true_or_false === true}
+                                          onChange={() => handleAnswerChange(currentQuestionIndex, { type: QuestionType.trueOrFalse, true_or_false: true })}
+                                      />
+                                      <label className="form-check-label">True</label>
+                                  </div>
+                                  <div className="form-check border-top py-2">
+                                      <input
+                                          className="form-check-input"
+                                          type="radio"
+                                          name={`trueOrFalse-${currentQuestionIndex}`}
+                                          checked={answers[currentQuestionIndex]?.true_or_false === false}
+                                          onChange={() => handleAnswerChange(currentQuestionIndex, { type: QuestionType.trueOrFalse, true_or_false: false })}
+                                      />
+                                      <label className="form-check-label">False</label>
+                                  </div>
+                              </div>
+                          )}
+                          {currentQuestion.type === 'MULTIPLE_CHOICE' && (
+                              <div>
+                              {currentQuestion.choices?.map((choice: Choice, index: number) => (
+                                <div key={index} className={`form-check ${index == 0 ? 'border-top mt-4 py-2' : 'border-top py-2'}`}>
+                                  <input
+                                    className="form-check-input"
+                                    type="radio"
+                                    name={`multipleChoice-${currentQuestionIndex}`}
+                                    checked={answers[currentQuestionIndex]?.choice === index}
+                                    onChange={() => handleAnswerChange(currentQuestionIndex, { type: QuestionType.multipleChoice, choice: index })}
+                                  />
+                                  <label className="form-check-label">{choice.choice}</label>
                                 </div>
-                                <div className="form-check">
-                                    <input
-                                        className="form-check-input"
-                                        type="radio"
-                                        name={`trueOrFalse-${currentQuestionIndex}`}
-                                        checked={answers[currentQuestionIndex]?.true_or_false === false}
-                                        onChange={() => handleAnswerChange(currentQuestionIndex, { type: QuestionType.trueOrFalse, true_or_false: false })}
-                                    />
-                                    <label className="form-check-label">False</label>
-                                </div>
-                            </div>
-                        )}
-                        {currentQuestion.type === 'MULTIPLE_CHOICE' && (
-                            <div>
-                                {currentQuestion.choices?.map((choice: Choice, index: number) => (
-                                    <div className="form-check" key={index}>
-                                        <input
-                                            className="form-check-input"
-                                            type="radio"
-                                            name={`multipleChoice-${currentQuestionIndex}`}
-                                            checked={answers[currentQuestionIndex]?.choice === index}
-                                            onChange={() => handleAnswerChange(currentQuestionIndex, { type: QuestionType.multipleChoice, choice: index })}
-                                        />
-                                        <label className="form-check-label">{choice.choice}</label>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                        {currentQuestion.type === 'FILL_IN_BLANK' && (
+                              ))}
+                          </div>
+                          
+                          )}
+                          {currentQuestion.type === 'FILL_IN_BLANK' && (
                             <input
                                 className="form-control"
                                 type="text"
                                 value={answers[currentQuestionIndex]?.blank || ''}
                                 onChange={(e) => handleAnswerChange(currentQuestionIndex, { type: QuestionType.fillInBlank, blank: e.target.value })}
                             />
-                        )}
+                          )}
+                        </div>
                       </div>
                     )}
-                    <div className="navigation-buttons mt-3">
-                        {currentQuestionIndex > 0 && <button className="btn btn-secondary me-2" onClick={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}>Previous</button>}
-                        {currentQuestionIndex < questions.length - 1 && <button className="btn btn-primary" onClick={handleNextQuestion}>Next</button>}
-                        {currentQuestionIndex === questions.length - 1 && <button className="btn btn-success" onClick={handleSubmitQuiz}>Submit Quiz</button>}
+                    <div className="navigation-buttons mt-3 d-flex justify-content-between">
+                        {currentQuestionIndex > 0 && 
+                          <button className="btn me-2 me-auto border" 
+                            style={{ backgroundColor: "#f5f5f5", fontSize: '0.8rem'}} 
+                            onClick={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}>
+                            <FaCaretLeft /> Previous
+                          </button>
+                          }
+                        <button
+                          className="btn btn-primary ms-auto "
+                          onClick={handleNextQuestion}
+                          style={{fontSize: '0.8rem'}}
+                          disabled={currentQuestionIndex >= questions.length - 1}
+                        >
+                         Next <FaCaretRight />
+                        </button>
                     </div>
+                    <Link                    
+                      to={`/Kanbas/Courses/${cid}/Quizzes/${qid}`}
+                      className="submit-section mt-5  float-end " style={{ height: '60px' }}>  
+                        <button className="btn float-end border fw-bold" 
+                          style={{ backgroundColor: "#f5f5f5", fontSize: '0.8rem' }}
+                          onClick={handleSubmitQuiz}>
+                            Submit Quiz
+                        </button>
+                    </Link>
                 </div>
                 <div className="col-md-4">
-                    <button className="btn btn-outline-secondary" onClick={() => window.location.href = `/quiz-editor/${qid}`}>Keep Editing This Quiz</button>
-                    <ul className="list-group mt-3">
-                        {questions.map((q: Question, index: number) => (
-                            <li className={`list-group-item ${currentQuestionIndex === index ? 'active' : ''}`} key={index}>
-                                Question {index + 1}
-                            </li>
-                        ))}
-                    </ul>
-                    <div className="mt-3">Time Elapsed: {timeElapsed} seconds</div>
+                    <Link
+                        to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/questions`}
+                        className="btn btn-secondary text-decoration-none"
+                    >
+                        <span className='fw-bold'>
+                            <RiPencilLine className="me-2"/> Keep Editing This Quiz
+                        </span>
+                    </Link>
+                    <div className='question-list-group mt-5'>
+                      <h4 >Questions</h4>
+                      <ul className=" mt-3">
+                          {questions.map((q: Question, index: number) => (
+                              <li className={`list-group-item ${currentQuestionIndex === index ? 'active fw-bold' : ''}`} 
+                                  key={index}
+                                  onClick={() => setCurrentQuestionIndex(index)}
+                                  style={{ cursor: 'pointer' }}
+                              >
+                                  {isQuestionAnswered(answers[index]) ? <FaCheck className="me-2 text-secondary" /> : <LiaQuestionCircle className="me-2 text-secondary" />}
+                                  <span style={{ color: "#0374B5" }}>Question {index + 1}</span>                   
+                              </li>
+                          ))}
+                      </ul>
+                    </div>
+                    
+                    <div className="mt-3">
+                      Time Elapsed: 
+                      <span className="ms-2 fs-7" style={{ color: "#0374B5",  cursor: 'pointer', fontSize: '0.8rem' }} onClick={toggleVisibility}>{isHidden ? 'Show' : 'Hide'}</span>
+                    </div>
+                    {!isHidden && (
+                      <div className="mt-1">
+                        {minutes} Minutes, {seconds} Seconds
+                      </div>
+                    )}
                 </div>
             </div>
         </div>

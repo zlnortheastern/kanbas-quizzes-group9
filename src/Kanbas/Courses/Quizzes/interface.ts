@@ -8,7 +8,7 @@ export interface Quiz {
   timeLimit: number;
   multipleAttempts: boolean;
   attemptLimit: number;
-  showCorrectAnswers: string;
+  showCorrectAnswers: ShowAnswerType;
   accessCode: string;
   oneQuestionAtATime: boolean;
   webcamRequired: boolean;
@@ -26,6 +26,12 @@ export enum QuestionType {
   trueOrFalse = "TRUE_OR_FALSE",
   multipleChoice = "MULTIPLE_CHOICE",
   fillInBlank = "FILL_IN_BLANK",
+}
+
+export enum ShowAnswerType {
+  after_due_date = "after_due_date",
+  immediately = "immediately",
+  never = "never",
 }
 export interface Choice {
   _id: string;
@@ -60,4 +66,6 @@ export interface Answers {
   score: number;
   total: number;
   answers: Answer[];
+  submit_time: string;
+  time_used: number;
 }

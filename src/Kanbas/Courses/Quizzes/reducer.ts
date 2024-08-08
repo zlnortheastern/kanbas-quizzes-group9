@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Quiz } from "./interface";
+import { Quiz, ShowAnswerType } from "./interface";
 
 interface QuizzesState {
   quizzes: Quiz[];
@@ -19,7 +19,7 @@ const initialState: QuizzesState = {
     timeLimit: 0,
     multipleAttempts: false,
     attemptLimit: 100,
-    showCorrectAnswers: "Immediately",
+    showCorrectAnswers: ShowAnswerType.immediately,
     accessCode: "",
     oneQuestionAtATime: false,
     webcamRequired: false,
@@ -30,6 +30,7 @@ const initialState: QuizzesState = {
     lastModified: "",
     course: "course id",
     published: false,
+
   },
 };
 
