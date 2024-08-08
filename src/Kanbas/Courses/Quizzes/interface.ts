@@ -39,8 +39,6 @@ export interface Choice {
   correct: boolean;
 }
 export interface Question {
-  _id: string;
-  quiz: string;
   type: QuestionType;
   title: string;
   points: number;

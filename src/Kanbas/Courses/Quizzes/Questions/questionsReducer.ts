@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Question, Questions, QuestionType } from "../interface";
+import { Question, QuestionType } from "../interface";
 
 export interface RootState {
   questions: Question[];
@@ -8,10 +8,7 @@ export interface RootState {
 
 const initialState: RootState = {
   questions: [],
-
   question: {
-    _id: "",
-    quiz: "",
     type: QuestionType.multipleChoice,
     title: "",
     points: 0,
@@ -38,21 +35,19 @@ const questionsSlice = createSlice({
     },
 
     addQuestion: (state, action: PayloadAction<Question>) => {
-      state.questions = [action.payload, ...state.questions];
+      state.questions.push(action.payload);
     },
-    deleteQuestion: (state, action: PayloadAction<string>) => {
+
+    deleteQuestion: (state, action: PayloadAction<{ title: string }>) => {
       state.questions = state.questions.filter(
-        (question) => question._id !== action.payload
+        (question) => question.title !== action.payload.title
       );
     },
+
     updateQuestion: (state, action: PayloadAction<Question>) => {
-      state.questions = state.questions.map((question) => {
-        if (question._id === action.payload._id) {
-          return action.payload;
-        } else {
-          return question;
-        }
-      });
+      state.questions = state.questions.map((question) =>
+        question.title === action.payload.title ? action.payload : question
+      );
     },
   },
 });

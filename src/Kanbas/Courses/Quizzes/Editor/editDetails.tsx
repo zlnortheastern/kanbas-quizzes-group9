@@ -32,6 +32,7 @@ import { setQuiz, addQuiz, updateQuiz } from "../reducer";
 
 export default function EditDetails() {
   const quiz = useSelector((state: any) => state.quizzesReducer.quiz);
+  const questions = useSelector((state: any) => state.quizzesReducer.questions);
   const dispatch = useDispatch();
   const { cid, qid } = useParams();
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ export default function EditDetails() {
   const [multipleAttempts, setMultipleAttempts] = useState(false);
   const [showCorrectAnswers, setShowCorrectAnswers] = useState("Always");
   const [accessCode, setAccessCode] = useState("");
-  /*
+
   const calculatePoints = (questions: any) => {
     let totalPoints = 0;
     questions.forEach((q: any) => {
@@ -59,13 +60,12 @@ export default function EditDetails() {
     });
     return totalPoints;
   };
-  */
 
   const handleAddQuiz = (published: any) => {
     const newQuiz = {
       ...quiz,
       published: published,
-      //points: calculatePoints(quiz.questions),
+      points: calculatePoints(questions),
     };
     dispatch(setQuiz(newQuiz));
     if (published && cid !== undefined) {

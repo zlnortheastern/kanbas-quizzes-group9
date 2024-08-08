@@ -25,9 +25,18 @@ const choiceSlice = createSlice({
     setChoice(state, action: PayloadAction<Choice>) {
       state.choice = action.payload;
     },
+    addChoice(state, action: PayloadAction<Choice>) {
+      state.choices.push(action.payload);
+    },
+    deleteChoice(state, action: PayloadAction<string>) {
+      state.choices = state.choices.filter(
+        (choice) => choice._id !== action.payload
+      );
+    },
   },
 });
 
-export const { setChoices, setChoice } = choiceSlice.actions;
+export const { setChoices, setChoice, addChoice, deleteChoice } =
+  choiceSlice.actions;
 
 export default choiceSlice.reducer;

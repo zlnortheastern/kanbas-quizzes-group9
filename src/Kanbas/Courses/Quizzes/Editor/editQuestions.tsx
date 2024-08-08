@@ -12,7 +12,7 @@ export default function EditQuestions() {
   const quiz = useSelector((state: any) => state.quizzesReducer.quiz);
 
   const dispatch = useDispatch();
-  const { cid, qid } = useParams();
+  const { cid, qid, questionsId, title } = useParams();
   const navigate = useNavigate();
   const [questions, setQuestions] = useState<Question[]>([]);
 
@@ -29,7 +29,6 @@ export default function EditQuestions() {
     }
   }, [qid, dispatch]);
 
-  /*
   const calculatePoints = (questions: any) => {
     let totalPoints = 0;
     questions.forEach((q: any) => {
@@ -37,7 +36,7 @@ export default function EditQuestions() {
     });
     return totalPoints;
   };
-  */
+
   const handleAddQuiz = (published: any) => {
     const newQuiz = {
       ...quiz,
@@ -64,7 +63,7 @@ export default function EditQuestions() {
     const newQuiz = {
       ...quiz,
       published: published,
-      //points: calculatePoints(quiz.questions),
+      points: calculatePoints(questions),
     };
     dispatch(setQuiz(newQuiz));
     if (published) {
@@ -90,8 +89,12 @@ export default function EditQuestions() {
     }
   };
 
-  const handleNavigate = (id: any) => {
-    navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Question/${id}`);
+  const handleNavigate = (title: string) => {
+    navigate(
+      `/Kanbas/Courses/${cid}/Quizzes/${qid}/Question/${encodeURIComponent(
+        title
+      )}`
+    );
   };
 
   return (
@@ -158,7 +161,7 @@ export default function EditQuestions() {
                 {question.question}
                 <button
                   className="btn btn-danger btn-sm float-end"
-                  onClick={() => handleNavigate(question._id)}
+                  onClick={() => handleNavigate(question.title)}
                   style={{
                     position: "absolute",
                     right: "20px",
