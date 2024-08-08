@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Quiz, Question, Answer, Choice, QuestionType } from './interface'; 
 import * as client from "./client";
-import { useAuth } from '../../Authentication/AuthProvider';
+import { useAuth, useUserRole } from '../../Authentication/AuthProvider';
 import { CgDanger } from "react-icons/cg";
 import { RiPencilLine } from "react-icons/ri";
 import { FaCaretLeft, FaCaretRight, FaCheck } from "react-icons/fa6";
@@ -13,6 +13,7 @@ export default function QuizPreview() {
     const { cid, qid } = useParams();
     const auth  = useAuth();
     const userId = auth.token;
+    const role = useUserRole();
     const [quiz, setQuiz] = useState<Quiz | null>(null);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -79,7 +80,6 @@ export default function QuizPreview() {
     if (!quiz) return <div>Loading...no such quiz</div>;
     if (!questions || questions.length === 0) return <div>Questions is [].</div>;
 
-    // 检查 currentQuestionIndex 是否超出范围
     if (currentQuestionIndex >= questions.length) {
         setCurrentQuestionIndex(questions.length - 1);
         return null;
@@ -145,10 +145,13 @@ export default function QuizPreview() {
             <div className="row">
                 <div className="col-md-8">
                     <h2 className="fw-bold my-3">{quiz.title}</h2>
-                    <div className="alert alert-danger d-flex align-items-center">
+                    
+                    {role === "FACULTY" && (
+                      <div className="alert alert-danger d-flex align-items-center">
                         <CgDanger className="me-3" style={{ fontSize: '1.5em' }} />
                         This is a preview of the published version of the quiz
-                    </div>
+                      </div>
+                    )}
                     <p>Started: {startTime}</p>
                     <h2 className='fw-bold my-2'>Quiz Instructions</h2>
                     {quiz.description && <p>{quiz.description}</p>}
@@ -242,14 +245,16 @@ export default function QuizPreview() {
                     </Link>
                 </div>
                 <div className="col-md-4">
-                    <Link
-                        to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/questions`}
-                        className="btn btn-secondary text-decoration-none"
-                    >
-                        <span className='fw-bold'>
-                            <RiPencilLine className="me-2"/> Keep Editing This Quiz
-                        </span>
-                    </Link>
+                    {role === "FACULTY" && (
+                      <Link
+                          to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/questions`}
+                          className="btn btn-secondary text-decoration-none"
+                      >
+                          <span className='fw-bold'>
+                              <RiPencilLine className="me-2"/> Keep Editing This Quiz
+                          </span>
+                      </Link>
+                    ) }
                     <div className='question-list-group mt-5'>
                       <h4 >Questions</h4>
                       <ul className=" mt-3">

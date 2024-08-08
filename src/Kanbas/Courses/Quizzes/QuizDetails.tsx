@@ -1,18 +1,47 @@
 import React, { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams,useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getQuizById } from './client'; 
 import { setQuizzes } from './reducer';
 import { FaPencil } from "react-icons/fa6";
+import { getAnswersByUser } from './client';
+import { useAuth } from '../../Authentication/AuthProvider'; 
+import { Answers} from "./interface";
 
 export default function QuizDetails() {
-  const { qid } = useParams<{ qid: string }>();
-  console.log("qid: " + qid);
+  const navigate = useNavigate();
+  const { cid, qid } = useParams();
+  const auth = useAuth();
+  const userId = auth.token;
   const dispatch = useDispatch();
   const quiz = useSelector((state: any) =>
     state.quizzesReducer.quizzes.find((q: any) => q._id === qid)
   );
-  console.log("quiz: " + quiz);
+  // console.log("quiz: " + quiz);
+  
+  const handlePreviewClick = async () => {
+    if (!qid || !userId) {
+      console.error('Quiz ID or User ID is undefined');
+      return;
+    }
+    try {
+      const answers = await getAnswersByUser(qid, userId);
+      
+      if (answers && answers.length > 0) {
+        answers.sort(
+          (a: Answers, b: Answers) => +new Date(b.submit_time) - +new Date(a.submit_time)
+        );
+        const newestAnswerId = answers[0]._id; 
+        navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Answer/${newestAnswerId}`);
+        console.log("Found answers by getAnswersByUser so go back to the attempt page.")
+      } else {
+        navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview`);
+      }
+    } catch (error) {
+      console.error('Error fetching answers:', error);
+      navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview`);
+    }
+  };
   
   useEffect(() => {
     if (!quiz) {
@@ -47,12 +76,17 @@ export default function QuizDetails() {
   return (
     <div className="container mt-5">
       <div className="d-flex justify-content-center mb-4">
-        <Link to={`preview`} className="btn btn-secondary me-2">Preview</Link>
+        <button 
+          onClick={handlePreviewClick} 
+          className="btn btn-secondary me-2" 
+          id="wd-quiz-preview-btn"
+        >
+          Preview
+        </button>
         <Link  to={`edit`} className="btn btn-secondary"id="wd-quiz-edit-btn" >
-          <FaPencil className="position-relative me-2" style={{transform: 'rotate(270deg)', bottom: "2px"}}  />
-          Edit
-        </Link>
-        
+            <FaPencil className="position-relative me-2" style={{transform: 'rotate(270deg)', bottom: "2px"}}  />
+            Edit
+        </Link>        
       </div>
       <hr/>
       <h1 className="text-start pe-3 mt-2">{quiz.title}</h1>
