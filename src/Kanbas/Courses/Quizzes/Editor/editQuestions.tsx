@@ -18,12 +18,32 @@ export default function EditQuestions() {
 
   useEffect(() => {
     if (qid !== "new" && qid !== undefined) {
-      client.getQuizById(qid).then((quiz) => {
-        dispatch(setQuiz(quiz));
-        client.getQuestionsByQuiz(qid).then((fetchedQuestions: Questions) => {
-          setQuestions(fetchedQuestions.questions);
+      client
+        .getQuizById(qid)
+        .then((quiz) => {
+          dispatch(setQuiz(quiz));
+
+          client
+            .getQuestionsByQuiz(qid)
+            .then((fetchedQuestions: Questions | null) => {
+              if (
+                fetchedQuestions &&
+                Array.isArray(fetchedQuestions.questions)
+              ) {
+                setQuestions(fetchedQuestions.questions);
+              } else {
+                console.error("Fetched questions is null or not an array");
+
+                setQuestions([]);
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching questions:", error);
+            });
+        })
+        .catch((error) => {
+          console.error("Error fetching quiz:", error);
         });
-      });
     } else {
       dispatch(setQuiz({ title: "", description: "", points: 0, ...quiz }));
     }
@@ -41,7 +61,7 @@ export default function EditQuestions() {
     const newQuiz = {
       ...quiz,
       published: published,
-      //points: calculatePoints(quiz.questions),
+      points: calculatePoints(questions),
     };
     dispatch(setQuiz(newQuiz));
     if (published && cid !== undefined) {

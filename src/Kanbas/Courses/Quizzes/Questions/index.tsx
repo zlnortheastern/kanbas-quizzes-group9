@@ -68,31 +68,46 @@ export default function Question() {
   useEffect(() => {
     if (decodedTitle !== "new") {
       const fetchQuestion = async () => {
-        const questionSet = await client.getQuestions(questionsId);
-        const question = questionSet.questions.find(
-          (question: { title: string | undefined }) =>
-            question.title === decodedTitle
-        );
-        dispatch(setQuestion(question));
-        dispatch(setChoices(question.choices));
-        dispatch(setBlanks(question.blank));
-        if (question.type === QuestionType.multipleChoice) {
-          setDisabled(true);
-          setIsMultipleChoice(true);
-          setIsFillInBlank(false);
-          setIsTrueOrFalse(false);
-        } else if (question.type === QuestionType.trueOrFalse) {
-          setDisabled(true);
-          setIsMultipleChoice(false);
-          setIsFillInBlank(false);
-          setIsTrueOrFalse(true);
-        } else if (question.type === QuestionType.fillInBlank) {
-          setDisabled(true);
-          setIsMultipleChoice(false);
-          setIsFillInBlank(true);
-          setIsTrueOrFalse(false);
+        try {
+          const questionSet = await client.getQuestions(questionsId);
+
+          if (questionSet && Array.isArray(questionSet.questions)) {
+            const question = questionSet.questions.find(
+              (question: { title: string }) => question.title === decodedTitle
+            );
+
+            if (question) {
+              dispatch(setQuestion(question));
+              dispatch(setChoices(question.choices || []));
+              dispatch(setBlanks(question.blank || []));
+
+              if (question.type === QuestionType.multipleChoice) {
+                setDisabled(true);
+                setIsMultipleChoice(true);
+                setIsFillInBlank(false);
+                setIsTrueOrFalse(false);
+              } else if (question.type === QuestionType.trueOrFalse) {
+                setDisabled(true);
+                setIsMultipleChoice(false);
+                setIsFillInBlank(false);
+                setIsTrueOrFalse(true);
+              } else if (question.type === QuestionType.fillInBlank) {
+                setDisabled(true);
+                setIsMultipleChoice(false);
+                setIsFillInBlank(true);
+                setIsTrueOrFalse(false);
+              }
+            } else {
+              console.error("Question not found");
+            }
+          } else {
+            console.error("Invalid questionSet or questions array is missing");
+          }
+        } catch (error) {
+          console.error("Error fetching questions:", error);
         }
       };
+
       fetchQuestion();
     } else {
       dispatch(setQuestion(intialQuestion));
