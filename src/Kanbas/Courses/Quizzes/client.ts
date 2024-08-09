@@ -46,3 +46,8 @@ export const getAnswersByUser = async (qid: string, uid: string) => {
   );
   return response.data;
 };
+
+export const submitQuizAnswers = async (quizId: string, userId: string, answerSet: any) => {
+  const response = await axios.post(`${QUIZZES_API}/${quizId}/users/${userId}/answers`, answerSet);
+  return response.data;
+};
