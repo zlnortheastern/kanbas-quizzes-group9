@@ -12,27 +12,27 @@ import { useDispatch, useSelector } from "react-redux";
 import * as client from "../client";
 import { FaBan } from "react-icons/fa";
 import { IoEllipsisVertical } from "react-icons/io5";
-import { PiRainbowBold } from "react-icons/pi";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBold,
-  faItalic,
-  faUnderline,
-  faFont,
-  faSortDesc,
-  faPencilAlt,
-  faEllipsisV,
-  faKeyboard,
-  faCode,
-  faExpandArrowsAlt,
-  faGripVertical,
-} from "@fortawesome/free-solid-svg-icons";
+  BtnBold,
+  BtnItalic,
+  BtnUnderline,
+  BtnBulletList,
+  BtnNumberedList,
+  BtnLink,
+  BtnStrikeThrough,
+  BtnStyles,
+  BtnRedo,
+  BtnUndo,
+  BtnClearFormatting,
+  Editor,
+  EditorProvider,
+  Toolbar,
+} from "react-simple-wysiwyg";
 import "./index.css";
 import { setQuiz, addQuiz, updateQuiz } from "../reducer";
 
 export default function EditDetails() {
   const quiz = useSelector((state: any) => state.quizzesReducer.quiz);
-  const questions = useSelector((state: any) => state.quizzesReducer.questions);
   const dispatch = useDispatch();
   const { cid, qid } = useParams();
   const navigate = useNavigate();
@@ -52,20 +52,13 @@ export default function EditDetails() {
   const [multipleAttempts, setMultipleAttempts] = useState(false);
   const [showCorrectAnswers, setShowCorrectAnswers] = useState("Always");
   const [accessCode, setAccessCode] = useState("");
-
-  const calculatePoints = (questions: any) => {
-    let totalPoints = 0;
-    questions.forEach((q: any) => {
-      totalPoints += q.points;
-    });
-    return totalPoints;
-  };
+  const [points, setPoints] = useState(0);
 
   const handleAddQuiz = (published: any) => {
     const newQuiz = {
       ...quiz,
       published: published,
-      points: calculatePoints(questions),
+      points: points,
     };
     dispatch(setQuiz(newQuiz));
     if (published && cid !== undefined) {
@@ -86,7 +79,7 @@ export default function EditDetails() {
     const newQuiz = {
       ...quiz,
       published: published,
-      //points: calculatePoints(quiz.questions),
+      points: points,
     };
     dispatch(setQuiz(newQuiz));
     if (published) {
@@ -161,117 +154,34 @@ export default function EditDetails() {
       <label htmlFor="input-1" className="form-label ">
         Quiz Instructions:
       </label>
+
       <div className="d-flex justify-content-between" style={{ width: "100%" }}>
-        <div className="d-flex">
-          <div style={{ marginRight: "23px" }}>
-            <p>Edit</p>
-          </div>
-          <div style={{ marginRight: "23px" }}>
-            <p>View</p>
-          </div>
-          <div style={{ marginRight: "23px" }}>
-            <p>Insert</p>
-          </div>
-          <div style={{ marginRight: "23px" }}>
-            <p>Format</p>
-          </div>
-          <div style={{ marginRight: "23px" }}>
-            <p>Tools</p>
-          </div>
-          <div>
-            <p>Table</p>
-          </div>
-        </div>
-        <div className="d-flex align-items-center">
-          <p>
-            <PiRainbowBold style={{ color: "green", marginRight: "10px" }} />
-            100%
-          </p>
-        </div>
-      </div>
-      <div className="d-flex justify-content-between">
-        <div className="d-flex">
-          <select
-            className="form-select border-0"
-            style={{ width: "100px", marginTop: "-10px" }}
+        <EditorProvider>
+          <Editor
+            value={quiz.description}
+            onChange={(e) => {
+              const newValue = e.target.value;
+              dispatch(setQuiz({ ...quiz, description: newValue }));
+            }}
           >
-            <option>12pt</option>
-            <option>14pt</option>
-            <option>16pt</option>
-            <option>18pt</option>
-            <option>20pt</option>
-          </select>
-          <select
-            className="form-select border-0"
-            style={{ width: "150px", marginRight: "23px", marginTop: "-10px" }}
-          >
-            <option>Paragraph</option>
-            <option>Header</option>
-          </select>
-          <div style={{ marginRight: "23px", marginTop: "9px", color: "gray" }}>
-            <p>|</p>
-          </div>
-          <div className="p-0 pt-2" style={{ marginRight: "23px" }}>
-            <FontAwesomeIcon icon={faBold} aria-hidden="true" />
-          </div>
-          <div className="p-0 pt-2" style={{ marginRight: "23px" }}>
-            <FontAwesomeIcon icon={faItalic} aria-hidden="true" />
-          </div>
-          <div className="p-0 pt-2" style={{ marginRight: "23px" }}>
-            <FontAwesomeIcon icon={faUnderline} aria-hidden="true" />
-          </div>
-          <div className="p-0 pt-2" style={{ marginRight: "23px" }}>
-            <FontAwesomeIcon icon={faFont} aria-hidden="true" />
-          </div>
-          <div className="p-0 pt-1" style={{ marginRight: "23px" }}>
-            <FontAwesomeIcon icon={faSortDesc} aria-hidden="true" />
-          </div>
-          <div className="p-0 pt-2" style={{ marginRight: "23px" }}>
-            <FontAwesomeIcon icon={faPencilAlt} aria-hidden="true" />
-          </div>
-          <div className="p-0 pt-1" style={{ marginRight: "23px" }}>
-            <FontAwesomeIcon icon={faSortDesc} aria-hidden="true" />
-          </div>
-          <div style={{ marginRight: "23px", marginTop: "9px", color: "gray" }}>
-            <p>|</p>
-          </div>
-          <div className="p-0 pt-2" style={{ marginRight: "23px" }}>
-            <FontAwesomeIcon icon={faEllipsisV} aria-hidden="true" />
-          </div>
-        </div>
+            <Toolbar>
+              <BtnUndo />
+              <BtnRedo />
+              <BtnBold />
+              <BtnItalic />
+              <BtnUnderline />
+              <BtnStrikeThrough />
+              <BtnBulletList />
+              <BtnNumberedList />
+              <BtnLink />
+              <BtnClearFormatting />
+
+              <BtnStyles />
+            </Toolbar>
+          </Editor>
+        </EditorProvider>
       </div>
-      <textarea
-        className="form-control p-3"
-        placeholder="New Description"
-        value={quiz.description}
-        onChange={(e) => {
-          const newValue = e.target.value;
-          dispatch(setQuiz({ ...quiz, description: newValue }));
-        }}
-      />
-      <div className="d-flex float-end">
-        <div className="col-auto pt-1" style={{ marginRight: "23px" }}>
-          <FontAwesomeIcon icon={faKeyboard} className="text-danger" />
-        </div>
-        <div style={{ marginRight: "23px", marginTop: "3px", color: "gray" }}>
-          <p>|</p>
-        </div>
-        <div className="col-auto pt-1" style={{ marginRight: "23px" }}>
-          <p className="text-danger">0 Words</p>
-        </div>
-        <div style={{ marginRight: "23px", marginTop: "3px", color: "gray" }}>
-          <p>|</p>
-        </div>
-        <div className="col-auto pt-1" style={{ marginRight: "23px" }}>
-          <FontAwesomeIcon icon={faCode} className="text-danger" />
-        </div>
-        <div className="col-auto pt-1" style={{ marginRight: "23px" }}>
-          <FontAwesomeIcon icon={faExpandArrowsAlt} className="text-danger" />
-        </div>
-        <div className="col-auto pt-1">
-          <FontAwesomeIcon icon={faGripVertical} />
-        </div>
-      </div>
+
       <br />
       <br />
       <div className="container">
