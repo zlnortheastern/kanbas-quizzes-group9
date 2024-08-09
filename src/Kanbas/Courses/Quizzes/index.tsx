@@ -36,6 +36,7 @@ export default function Quizzes({ role }: { role: string }) {
     setQuestionCounts(counts);
   };
 
+
   
   const handleToggle = () => {
     setIsCollapsed(!isCollapsed);
@@ -107,29 +108,8 @@ export default function Quizzes({ role }: { role: string }) {
                   </div>
                   <div className="ms-auto position-relative">
                     {role === "FACULTY" && (
-                      <span className="p-3">
-                        {q.published ? (
-                          <span>
-                            <GreenCheckmark />
-                          </span>
-                        ) : (
-                          <span>🚫</span>
-                        )}
-                      </span>
-                    )}
-                    {role === "FACULTY" && (
-                      <div className="dropdown d-inline me-1 float-end">
-                        <button
-                          id="wd-publish-all-btn"
-                          className="btn p-0 mb-1 btn-transparent"
-                          type="button"
-                          data-bs-toggle="dropdown"
-                        >
-                          <IoEllipsisVertical className="fs-4 context-menu-button" />
-                        </button>
-                        <QuizContextMenu quizId={q._id} />
-                      </div>
-                    )}
+                      <QuizContextMenu quizId={q._id} />
+                    )}                  
                   </div>
                 </li>
               ))}
