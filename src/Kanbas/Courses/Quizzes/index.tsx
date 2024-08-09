@@ -18,6 +18,8 @@ export default function Quizzes({ role }: { role: string }) {
   const { quizzes } = useSelector((state: any) => state.quizzesReducer);
   const dispatch = useDispatch();
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [questionCounts, setQuestionCounts] = useState<{ [key: string]: number }>({});
+
   const fetchQuizzes = async () => {
     const quizzes = await client.findQuizzesForCourse(cid as string);
     if (role === "FACULTY") {
@@ -25,7 +27,16 @@ export default function Quizzes({ role }: { role: string }) {
     } else {
       dispatch(setQuizzes(quizzes.filter((q: any) => q.published)));
     }
+
+    const counts: { [key: string]: number } = {};
+    for (let quiz of quizzes) {
+      const questionSet = await client.getQuestionsByQuiz(quiz._id);
+      counts[quiz._id] = questionSet.questions ? questionSet.questions.length : -1;
+    }
+    setQuestionCounts(counts);
   };
+
+  
   const handleToggle = () => {
     setIsCollapsed(!isCollapsed);
   };
@@ -90,7 +101,8 @@ export default function Quizzes({ role }: { role: string }) {
                     </Link>
                     <p className="mb-0 text-muted fs-6">
                       <b>{getAvailability(q)}</b> | <b>Due</b>{" "}
-                      {formatDate(q.dueDate)} | {q.points} pts | ??? Questions
+                      {formatDate(q.dueDate)} | {q.points} pts |{" "}
+                       {questionCounts[q._id] || 0} Questions
                     </p>
                   </div>
                   <div className="ms-auto position-relative">
