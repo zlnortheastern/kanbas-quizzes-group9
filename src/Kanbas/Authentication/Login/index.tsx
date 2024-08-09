@@ -15,7 +15,7 @@ export default function Login() {
   const getUser = async (input: any) => {
     try {
       await auth.login(input);
-      navigate("/Kanbas/Dashboard");
+      navigate("/Kanbas/Account");
     } catch (error: any) {
       setErrorMessage(error.message);
     }
