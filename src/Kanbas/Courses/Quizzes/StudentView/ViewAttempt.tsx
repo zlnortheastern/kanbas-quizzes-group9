@@ -62,7 +62,7 @@ export default function ViewAttempt() {
     displayQuestion = false;
   }
 
-  if (!quiz || !questions || !answers ) return <></>;
+  if (!quiz || !questions || !answers) return <></>;
   return (
     <div className="row">
       <div className="col-9">
@@ -106,7 +106,7 @@ export default function ViewAttempt() {
                 <Link
                   to={`../Quizzes/${qid}/Answer/${answer._id}`}
                   className="text-decoration-none text-danger fw-bold"
-                >{`Attempt ${index + 1}: ${answer.score}`}</Link>
+                >{`Attempt ${answers.length - index}: ${answer.score}`}</Link>
               </div>
             ))}
           </div>

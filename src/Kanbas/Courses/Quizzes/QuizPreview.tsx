@@ -14,6 +14,7 @@ export default function QuizPreview() {
     const auth  = useAuth();
     const userId = auth.token;
     const role = useUserRole();
+    const navigate = useNavigate();
     const [quiz, setQuiz] = useState<Quiz | null>(null);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -117,7 +118,8 @@ export default function QuizPreview() {
         };
         try {
             const response =  await client.submitQuizAnswers(qid, userId, answerSet);
-            console.log('Quiz submitted');
+            // console.log('Quiz submitted');
+            navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`);
         } catch (error) {
             console.error('Error submitting quiz:', error);
         }
@@ -233,16 +235,12 @@ export default function QuizPreview() {
                         >
                          Next <FaCaretRight />
                         </button>
-                    </div>
-                    <Link                    
-                      to={`/Kanbas/Courses/${cid}/Quizzes/${qid}`}
-                      className="submit-section mt-5  float-end " style={{ height: '60px' }}>  
-                        <button className="btn float-end border fw-bold" 
-                          style={{ backgroundColor: "#f5f5f5", fontSize: '0.8rem' }}
-                          onClick={handleSubmitQuiz}>
-                            Submit Quiz
-                        </button>
-                    </Link>
+                    </div> 
+                    <button className="btn float-end border fw-bold mt-4" 
+                      style={{ backgroundColor: "#f5f5f5", fontSize: '0.8rem' }}
+                      onClick={handleSubmitQuiz}>
+                        Submit Quiz
+                    </button>
                 </div>
                 <div className="col-md-4">
                     {role === "FACULTY" && (
