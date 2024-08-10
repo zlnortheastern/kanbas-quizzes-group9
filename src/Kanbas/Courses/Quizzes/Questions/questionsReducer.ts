@@ -13,7 +13,7 @@ const initialState: RootState = {
     title: "",
     points: 0,
     question: "",
-    true_or_false: undefined,
+    true_or_false: true,
     choices: [],
     blank: [],
   },
@@ -38,15 +38,19 @@ const questionsSlice = createSlice({
       state.questions.push(action.payload);
     },
 
-    deleteQuestion: (state, action: PayloadAction<{ title: string }>) => {
+    deleteQuestion: (state, action: PayloadAction<{ index: number }>) => {
       state.questions = state.questions.filter(
-        (question) => question.title !== action.payload.title
+        (_, idx) => idx !== action.payload.index
       );
     },
 
-    updateQuestion: (state, action: PayloadAction<Question>) => {
-      state.questions = state.questions.map((question) =>
-        question.title === action.payload.title ? action.payload : question
+    updateQuestion: (
+      state,
+      action: PayloadAction<{ question: Question; index: number }>
+    ) => {
+      const { question, index } = action.payload;
+      state.questions = state.questions.map((q, idx) =>
+        idx === index ? question : q
       );
     },
   },

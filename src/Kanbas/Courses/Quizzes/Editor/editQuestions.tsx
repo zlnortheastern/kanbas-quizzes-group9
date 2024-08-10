@@ -12,9 +12,11 @@ export default function EditQuestions() {
   const quiz = useSelector((state: any) => state.quizzesReducer.quiz);
 
   const dispatch = useDispatch();
-  const { cid, qid, questionsId, title } = useParams();
+  const { cid, qid, questionsId, index } = useParams();
+  const questionIndex = index ? parseInt(index, 10) : 0;
   const navigate = useNavigate();
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [question, setQuestion] = useState<Question | null>(null);
 
   useEffect(() => {
     if (qid !== "new" && qid !== undefined) {
@@ -109,29 +111,21 @@ export default function EditQuestions() {
     }
   };
 
-  const handleNavigate = (title: string) => {
-    navigate(
-      `/Kanbas/Courses/${cid}/Quizzes/${qid}/Question/${encodeURIComponent(
-        title
-      )}`
-    );
+  const handleNavigate = (index: number) => {
+    navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Question/${index}`);
   };
 
   return (
     <div className="me-2">
       <div className="float-end mt-2">
         Points {quiz.points} &nbsp; &nbsp;
-        {quiz.isPublished ? (
-          <i
-            className="fa fa-check-circle"
-            style={{ color: "green" }}
-            aria-hidden="true"
-          ></i>
+        {quiz.published ? (
+          <FaBan style={{ color: "green" }} aria-hidden="true" />
         ) : (
           <FaBan style={{ color: "grey" }} aria-hidden="true" />
         )}
         &nbsp;
-        {quiz.isPublished ? "Published" : "Not Published"}&nbsp; &nbsp;
+        {quiz.published ? "Published" : "Not Published"}&nbsp; &nbsp;
         <button type="button" className="btn btn-light ">
           <IoEllipsisVertical />
         </button>
@@ -181,7 +175,7 @@ export default function EditQuestions() {
                 {question.question}
                 <button
                   className="btn btn-danger btn-sm float-end"
-                  onClick={() => handleNavigate(question.title)}
+                  onClick={() => handleNavigate(questionIndex)}
                   style={{
                     position: "absolute",
                     right: "20px",

@@ -36,17 +36,14 @@ import {
   EditorProvider,
   Toolbar,
 } from "react-simple-wysiwyg";
-export default function Question() {
+export default function QuestionForm() {
   const question = useSelector((state: any) => state.questionsReducer.question);
   const choices = useSelector((state: any) => state.choicesReducer.choices);
   const blanks = useSelector((state: any) => state.blanksReducer.blanks);
   const navigate = useNavigate();
   let newQuestion = false;
-  const { courseId, quizId = "", questionsId = "", title = "" } = useParams();
-  const decodedTitle = decodeURIComponent(title || "");
-  if (decodedTitle == "new") {
-    newQuestion = true;
-  }
+
+  const { courseId, quizId = "", questionsId = "", index = "" } = useParams();
 
   const [isMultipleChoice, setIsMultipleChoice] = useState(true);
   const [isFillInBlank, setIsFillInBlank] = useState(false);
@@ -55,7 +52,7 @@ export default function Question() {
 
   const dispatch = useDispatch();
 
-  const intialQuestion = {
+  const initialQuestion = {
     type: QuestionType.multipleChoice,
     title: "",
     points: 0,
@@ -66,36 +63,41 @@ export default function Question() {
   };
 
   useEffect(() => {
-    if (decodedTitle !== "new") {
+    if (index !== "new") {
       const fetchQuestion = async () => {
         try {
           const questionSet = await client.getQuestions(questionsId);
 
           if (questionSet && Array.isArray(questionSet.questions)) {
-            const question = questionSet.questions.find(
-              (question: { title: string }) => question.title === decodedTitle
-            );
+            const questionIndex = parseInt(index, 10);
+            const question = questionSet.questions[questionIndex];
 
             if (question) {
               dispatch(setQuestion(question));
               dispatch(setChoices(question.choices || []));
               dispatch(setBlanks(question.blank || []));
 
-              if (question.type === QuestionType.multipleChoice) {
-                setDisabled(true);
-                setIsMultipleChoice(true);
-                setIsFillInBlank(false);
-                setIsTrueOrFalse(false);
-              } else if (question.type === QuestionType.trueOrFalse) {
-                setDisabled(true);
-                setIsMultipleChoice(false);
-                setIsFillInBlank(false);
-                setIsTrueOrFalse(true);
-              } else if (question.type === QuestionType.fillInBlank) {
-                setDisabled(true);
-                setIsMultipleChoice(false);
-                setIsFillInBlank(true);
-                setIsTrueOrFalse(false);
+              switch (question.type) {
+                case QuestionType.multipleChoice:
+                  setDisabled(true);
+                  setIsMultipleChoice(true);
+                  setIsFillInBlank(false);
+                  setIsTrueOrFalse(false);
+                  break;
+                case QuestionType.trueOrFalse:
+                  setDisabled(true);
+                  setIsMultipleChoice(false);
+                  setIsFillInBlank(false);
+                  setIsTrueOrFalse(true);
+                  break;
+                case QuestionType.fillInBlank:
+                  setDisabled(true);
+                  setIsMultipleChoice(false);
+                  setIsFillInBlank(true);
+                  setIsTrueOrFalse(false);
+                  break;
+                default:
+                  console.error("Unknown question type");
               }
             } else {
               console.error("Question not found");
@@ -110,21 +112,22 @@ export default function Question() {
 
       fetchQuestion();
     } else {
-      dispatch(setQuestion(intialQuestion));
-      dispatch(setChoices(intialQuestion.choices));
-      dispatch(setBlanks(intialQuestion.blank));
+      dispatch(setQuestion(initialQuestion));
+      dispatch(setChoices(initialQuestion.choices));
+      dispatch(setBlanks(initialQuestion.blank));
     }
-  }, [decodedTitle, questionsId, dispatch]);
+  }, [index, questionsId, dispatch]);
 
   const handleAddQuestion = async () => {
-    if (title === "new") {
+    if (index === "new") {
       const createdQuestion = await client.addQuestionToQuiz(quizId, question);
       dispatch(addQuestion(createdQuestion));
     } else {
-      await client.updateQuestion(quizId, question);
-      dispatch(updateQuestion(question));
+      const questionIndex = parseInt(index, 10);
+      await client.updateQuestion(quizId, question, questionIndex);
+      dispatch(updateQuestion({ question, index: questionIndex }));
     }
-    navigate(`Courses/${courseId}/Quizzes/${quizId}/questions`);
+    navigate(`/Courses/${courseId}/Quizzes/${quizId}/questions`);
   };
 
   const handleAddChoice = () => {

@@ -58,11 +58,11 @@ export default function EditDetails() {
   const [points, setPoints] = useState(0);
 
   const calculatePoints = (questions: any) => {
-    let points = 0;
+    let totalPoints = 0;
     questions.forEach((question: any) => {
-      points += question.points;
+      totalPoints += question.points;
     });
-    return points;
+    return totalPoints;
   };
 
   const handleAddQuiz = (published: any) => {
@@ -119,17 +119,13 @@ export default function EditDetails() {
     <div className="me-2">
       <div className="float-end mt-2">
         Points {quiz.points} &nbsp; &nbsp;
-        {quiz.isPublished ? (
-          <i
-            className="fa fa-check-circle"
-            style={{ color: "green" }}
-            aria-hidden="true"
-          ></i>
+        {quiz.published ? (
+          <FaBan style={{ color: "green" }} aria-hidden="true" />
         ) : (
           <FaBan style={{ color: "grey" }} aria-hidden="true" />
         )}
         &nbsp;
-        {quiz.isPublished ? "Published" : "Not Published"}&nbsp; &nbsp;
+        {quiz.published ? "Published" : "Not Published"}&nbsp; &nbsp;
         <button type="button" className="btn btn-light ">
           <IoEllipsisVertical />
         </button>
@@ -310,21 +306,45 @@ export default function EditDetails() {
               />
               <span>Minutes</span>
             </li>
-            <li className="list-group-item border-0">
+            <li className="list-group-item border-0 d-flex">
               <input
                 type="checkbox"
                 className="form-check-input me-2"
                 checked={quiz.multipleAttempts}
                 onChange={(e) => {
-                  const isChecked = e.target.checked;
-                  setMultipleAttempts(isChecked);
-                  dispatch(setQuiz({ ...quiz, multipleAttempts: isChecked }));
+                  dispatch(
+                    setQuiz({ ...quiz, multipleAttempts: e.target.checked })
+                  );
                 }}
                 id="multipleAttempts"
               />
-              <label htmlFor="multipleAttempts" className="form-check-label">
+              <label
+                htmlFor="multipleAttempts"
+                className="form-check-label"
+                style={{ marginRight: "50px" }}
+              >
                 Allow Multiple Attempts
               </label>
+              <input
+                type="number"
+                className="form-control"
+                id="multipleAttempts"
+                value={quiz.multipleAttempts}
+                onChange={(e) =>
+                  dispatch(
+                    setQuiz({
+                      ...quiz,
+                      multipleAttempts: parseInt(e.target.value),
+                    })
+                  )
+                }
+                style={{
+                  width: "70px",
+                  marginRight: "5px",
+                  marginTop: "-7px",
+                }}
+              />
+              <span>Attempts</span>
             </li>
             <li className="list-group-item border-0">
               <label htmlFor="showCorrectAnswers">Show Correct Answers</label>
@@ -338,9 +358,9 @@ export default function EditDetails() {
                   dispatch(setQuiz({ ...quiz, showCorrectAnswers: newValue }));
                 }}
               >
-                <option value="immediately">immediately</option>
-                <option value="after_due_date">after_due_date</option>
-                <option value="never">never</option>
+                <option value="immediately">Immediately</option>
+                <option value="after_due_date">After due date</option>
+                <option value="never">Never</option>
               </select>
             </li>
             <li className="list-group-item border-0">
