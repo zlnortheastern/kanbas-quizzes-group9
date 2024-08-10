@@ -69,9 +69,9 @@ export default function QuizPreview() {
       if (qid) {
         if (role === "FACULTY") {
           const latestAnswer = await client.getLatestAnswerByUser(qid, userId);
-          // console.log('Latest answers fetched for faculty:', latestAnswer);
+          // console.log('Latest answers fetched for faculty in PREVIEW page:', latestAnswer);
           if (latestAnswer) {
-            console.log('Latest answers fetched for faculty:', latestAnswer);
+            // console.log('Latest answers fetched for faculty:', latestAnswer);
             setAnswers(latestAnswer.answers);
           } else {
             const initializedAnswers = initializeAnswers(questions);
@@ -160,7 +160,7 @@ export default function QuizPreview() {
 
     const isQuestionAnswered = (answer: Answer) => {
         if (!answer || !answer.type) {
-          console.warn('Answer is undefined or missing type:', answer); // Debug log
+          // console.warn('Answer is undefined or missing type:', answer); // Debug log
           return false;
         }
         if (answer.type === QuestionType.trueOrFalse) {

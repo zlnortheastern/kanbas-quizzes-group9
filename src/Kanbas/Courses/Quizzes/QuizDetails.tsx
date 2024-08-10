@@ -43,6 +43,8 @@ export default function QuizDetails() {
     const fetchAnswer = async () => {
       if (qid && role === "FACULTY") {
         const latestAnswer = await client.getLatestAnswerByUser(qid, userId);
+        // console.log('Latest answers fetched for faculty in QUIZ DETAILS page:', latestAnswer);
+
         setAnswer(latestAnswer || null); 
       }
     };
