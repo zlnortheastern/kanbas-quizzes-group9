@@ -1,24 +1,10 @@
-import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import * as client from "../client";
-import React, { useEffect, useState } from "react";
-import { setQuiz, updateQuiz } from "../reducer";
-import { QuestionType } from "../interface";
-import {
-  setQuestions,
-  setQuestion,
-  addQuestion,
-  deleteQuestion,
-  updateQuestion,
-  RootState,
-} from "./questionsReducer";
-import {
-  setChoices,
-  setChoice,
-  addChoice,
-  deleteChoice,
-} from "./choicesReducer";
-import { setBlanks, setBlank, addBlank, deleteBlank } from "./blanksReducer";
+import "./index.css";
+import { useEffect, useState } from "react";
+import { QuestionType, Question } from "../interface";
+import { setQuestion } from "./questionsReducer";
+import { setChoices, addChoice, deleteChoice } from "./choicesReducer";
+import { setBlanks, addBlank, deleteBlank } from "./blanksReducer";
 import { GoTrash } from "react-icons/go";
 import {
   BtnBold,
@@ -36,98 +22,72 @@ import {
   EditorProvider,
   Toolbar,
 } from "react-simple-wysiwyg";
-export default function QuestionForm() {
-  const question = useSelector((state: any) => state.questionsReducer.question);
+
+interface QuestionFormProps {
+  initialQuestion: Question;
+  onSave: (question: Question) => void;
+  onCancel: () => void;
+}
+
+export default function QuestionForm({
+  initialQuestion,
+  onSave,
+  onCancel,
+}: QuestionFormProps) {
+  const dispatch = useDispatch();
   const choices = useSelector((state: any) => state.choicesReducer.choices);
   const blanks = useSelector((state: any) => state.blanksReducer.blanks);
-  const navigate = useNavigate();
-  let newQuestion = false;
-
-  const { courseId, quizId = "", questionsId = "", index = "" } = useParams();
 
   const [isMultipleChoice, setIsMultipleChoice] = useState(true);
   const [isFillInBlank, setIsFillInBlank] = useState(false);
   const [isTrueOrFalse, setIsTrueOrFalse] = useState(false);
-  const [isDisabled, setDisabled] = useState(false);
 
-  const dispatch = useDispatch();
-
-  const initialQuestion = {
-    type: QuestionType.multipleChoice,
-    title: "",
-    points: 0,
-    question: "",
-    true_or_false: true,
-    choices: [],
-    blank: [],
-  };
+  const [question, setLocalQuestion] = useState(
+    initialQuestion || {
+      type: QuestionType.multipleChoice,
+      title: "",
+      points: 0,
+      question: "",
+      true_or_false: true,
+      choices: [],
+      blank: [],
+    }
+  );
 
   useEffect(() => {
-    if (index !== "new") {
-      const fetchQuestion = async () => {
-        try {
-          const questionSet = await client.getQuestions(questionsId);
+    if (initialQuestion) {
+      setLocalQuestion(initialQuestion);
+      dispatch(setChoices(initialQuestion.choices || []));
+      dispatch(
+        setBlanks(initialQuestion.blank?.map((value) => ({ value })) || [])
+      );
 
-          if (questionSet && Array.isArray(questionSet.questions)) {
-            const questionIndex = parseInt(index, 10);
-            const question = questionSet.questions[questionIndex];
-
-            if (question) {
-              dispatch(setQuestion(question));
-              dispatch(setChoices(question.choices || []));
-              dispatch(setBlanks(question.blank || []));
-
-              switch (question.type) {
-                case QuestionType.multipleChoice:
-                  setDisabled(true);
-                  setIsMultipleChoice(true);
-                  setIsFillInBlank(false);
-                  setIsTrueOrFalse(false);
-                  break;
-                case QuestionType.trueOrFalse:
-                  setDisabled(true);
-                  setIsMultipleChoice(false);
-                  setIsFillInBlank(false);
-                  setIsTrueOrFalse(true);
-                  break;
-                case QuestionType.fillInBlank:
-                  setDisabled(true);
-                  setIsMultipleChoice(false);
-                  setIsFillInBlank(true);
-                  setIsTrueOrFalse(false);
-                  break;
-                default:
-                  console.error("Unknown question type");
-              }
-            } else {
-              console.error("Question not found");
-            }
-          } else {
-            console.error("Invalid questionSet or questions array is missing");
-          }
-        } catch (error) {
-          console.error("Error fetching questions:", error);
-        }
-      };
-
-      fetchQuestion();
-    } else {
-      dispatch(setQuestion(initialQuestion));
-      dispatch(setChoices(initialQuestion.choices));
-      dispatch(setBlanks(initialQuestion.blank));
+      switch (initialQuestion.type) {
+        case QuestionType.multipleChoice:
+          setIsMultipleChoice(true);
+          setIsFillInBlank(false);
+          setIsTrueOrFalse(false);
+          break;
+        case QuestionType.trueOrFalse:
+          setIsMultipleChoice(false);
+          setIsFillInBlank(false);
+          setIsTrueOrFalse(true);
+          break;
+        case QuestionType.fillInBlank:
+          setIsMultipleChoice(false);
+          setIsFillInBlank(true);
+          setIsTrueOrFalse(false);
+          break;
+        default:
+          console.error("Unknown question type");
+      }
     }
-  }, [index, questionsId, dispatch]);
+  }, [initialQuestion, dispatch]);
 
-  const handleAddQuestion = async () => {
-    if (index === "new") {
-      const createdQuestion = await client.addQuestionToQuiz(quizId, question);
-      dispatch(addQuestion(createdQuestion));
-    } else {
-      const questionIndex = parseInt(index, 10);
-      await client.updateQuestion(quizId, question, questionIndex);
-      dispatch(updateQuestion({ question, index: questionIndex }));
+  const handleSave = async () => {
+    if (onSave) {
+      onSave(question);
     }
-    navigate(`/Courses/${courseId}/Quizzes/${quizId}/questions`);
   };
 
   const handleAddChoice = () => {
@@ -137,7 +97,8 @@ export default function QuestionForm() {
       correct: false,
     };
     dispatch(addChoice(newChoice));
-    dispatch(setQuestion({ ...question, choices: [...choices, newChoice] }));
+    const updatedChoices = [...(question.choices || []), newChoice];
+    setLocalQuestion({ ...question, choices: updatedChoices });
   };
 
   const handleChoiceTextChange = (choiceId: string, value: any) => {
@@ -145,7 +106,7 @@ export default function QuestionForm() {
       choice._id === choiceId ? { ...choice, choice: value } : choice
     );
     dispatch(setChoices(updatedChoices));
-    dispatch(setQuestion({ ...question, choices: updatedChoices }));
+    setLocalQuestion({ ...question, choices: updatedChoices });
   };
 
   const handleCorrectAnswerChange = (choiceId: string) => {
@@ -154,22 +115,22 @@ export default function QuestionForm() {
       correct: choice._id === choiceId,
     }));
     dispatch(setChoices(updatedChoices));
-    dispatch(setQuestion({ ...question, choices: updatedChoices }));
+    setLocalQuestion({ ...question, choices: updatedChoices });
   };
 
   const handleDeleteChoice = (choiceId: string) => {
     dispatch(deleteChoice(choiceId));
-    const updatedChoices = choices.filter(
+    const updatedChoices = (question.choices || []).filter(
       (choice: any) => choice._id !== choiceId
     );
-    dispatch(setQuestion({ ...question, choices: updatedChoices }));
+    setLocalQuestion({ ...question, choices: updatedChoices });
   };
 
   const handleAddBlank = () => {
     const newBlank = { value: "" };
     const updatedBlanks = [...blanks, newBlank];
     dispatch(addBlank(newBlank));
-    dispatch(setQuestion({ ...question, blank: updatedBlanks }));
+    setLocalQuestion({ ...question, blank: updatedBlanks });
   };
 
   const handleBlankTextChange = (index: number, value: any) => {
@@ -177,15 +138,14 @@ export default function QuestionForm() {
       i === index ? { ...blank, value: value } : blank
     );
     dispatch(setBlanks(updatedBlanks));
-    dispatch(setQuestion({ ...question, blank: updatedBlanks }));
+    setLocalQuestion({ ...question, blank: updatedBlanks });
   };
 
   const handleDeleteBlank = (index: number) => {
     const blankToDelete = blanks[index];
     const updatedBlanks = blanks.filter((blank: any, i: number) => i !== index);
     dispatch(deleteBlank(blankToDelete.value));
-    dispatch(setBlanks(updatedBlanks));
-    dispatch(setQuestion({ ...question, blank: updatedBlanks }));
+    setLocalQuestion({ ...question, blank: updatedBlanks });
   };
 
   return (
@@ -200,29 +160,25 @@ export default function QuestionForm() {
               dispatch(setQuestion({ ...question, title: e.target.value }))
             }
             className="form-control"
+            style={{ width: `${question.title.length || 10}ch` }}
           />
         </div>
         <div className="col-3">
           <select
-            className="form-select"
-            value={question.questionType}
-            disabled={isDisabled}
+            className="form-select select-auto-width"
+            value={question.type}
             onChange={(e) => {
-              dispatch(
-                setQuestion({
-                  ...question,
-                  questionType: e.target.value as QuestionType,
-                })
-              );
-              if (e.target.value === QuestionType.multipleChoice) {
+              const newType = e.target.value as QuestionType;
+              setLocalQuestion({ ...question, type: newType });
+              if (newType === QuestionType.multipleChoice) {
                 setIsMultipleChoice(true);
                 setIsTrueOrFalse(false);
                 setIsFillInBlank(false);
-              } else if (e.target.value === QuestionType.trueOrFalse) {
+              } else if (newType === QuestionType.trueOrFalse) {
                 setIsMultipleChoice(false);
                 setIsTrueOrFalse(true);
                 setIsFillInBlank(false);
-              } else if (e.target.value === QuestionType.fillInBlank) {
+              } else if (newType === QuestionType.fillInBlank) {
                 setIsMultipleChoice(false);
                 setIsTrueOrFalse(false);
                 setIsFillInBlank(true);
@@ -246,7 +202,10 @@ export default function QuestionForm() {
                 id="points"
                 value={question.points}
                 onChange={(e) =>
-                  dispatch(setQuestion({ ...question, points: e.target.value }))
+                  setLocalQuestion({
+                    ...question,
+                    points: parseInt(e.target.value),
+                  })
                 }
               />
             </div>
@@ -276,9 +235,7 @@ export default function QuestionForm() {
               <Editor
                 value={question.question}
                 onChange={(e) =>
-                  dispatch(
-                    setQuestion({ ...question, question: e.target.value })
-                  )
+                  setLocalQuestion({ ...question, question: e.target.value })
                 }
               >
                 <Toolbar>
@@ -394,9 +351,7 @@ export default function QuestionForm() {
               <Editor
                 value={question.question}
                 onChange={(e) =>
-                  dispatch(
-                    setQuestion({ ...question, question: e.target.value })
-                  )
+                  setLocalQuestion({ ...question, question: e.target.value })
                 }
               >
                 <Toolbar>
@@ -501,9 +456,7 @@ export default function QuestionForm() {
               <Editor
                 value={question.question}
                 onChange={(e) =>
-                  dispatch(
-                    setQuestion({ ...question, question: e.target.value })
-                  )
+                  setLocalQuestion({ ...question, question: e.target.value })
                 }
               >
                 <Toolbar>
@@ -536,7 +489,7 @@ export default function QuestionForm() {
                 name="tf"
                 checked={question.true_or_false}
                 onChange={(e) =>
-                  dispatch(setQuestion({ ...question, true_or_false: true }))
+                  setLocalQuestion({ ...question, true_or_false: true })
                 }
               ></input>
               <label className="form-check-label pt-1" htmlFor="label-t">
@@ -552,7 +505,7 @@ export default function QuestionForm() {
                 name="tf"
                 checked={!question.true_or_false}
                 onChange={(e) =>
-                  dispatch(setQuestion({ ...question, true_or_false: false }))
+                  setLocalQuestion({ ...question, true_or_false: false })
                 }
               ></input>
               <label className="form-check-label pt-1" htmlFor="label-f">
@@ -566,22 +519,12 @@ export default function QuestionForm() {
       <br />
       <br />
 
-      <Link
-        to={`/Kanbas/Courses/${courseId}/Quizzes/${quizId}/Questions`}
-        className="btn btn-secondary m-2 "
-      >
+      <button className="btn btn-secondary m-2" onClick={onCancel}>
         Cancel
-      </Link>
-      {newQuestion && (
-        <button className="btn btn-danger m-2" onClick={handleAddQuestion}>
-          Save Question
-        </button>
-      )}
-      {!newQuestion && (
-        <button className="btn btn-danger m-2" onClick={handleAddQuestion}>
-          Update Question
-        </button>
-      )}
+      </button>
+      <button className="btn btn-danger m-2" onClick={handleSave}>
+        {initialQuestion ? "Update Question" : "Save Question"}
+      </button>
     </div>
   );
 }

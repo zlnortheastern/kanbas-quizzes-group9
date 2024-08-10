@@ -1,22 +1,25 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import { addQuiz, setQuiz, updateQuiz } from "../reducer";
 import * as client from "../client";
 import { FaBan, FaPlus } from "react-icons/fa";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { Link, NavLink } from "react-router-dom";
-import { Questions, Question } from "../interface";
+import { Questions, Question, QuestionType } from "../interface";
 import { useEffect, useState } from "react";
+import QuestionForm from "../Questions/questionForm";
+import "./index.css";
 
 export default function EditQuestions() {
   const quiz = useSelector((state: any) => state.quizzesReducer.quiz);
 
   const dispatch = useDispatch();
-  const { cid, qid, questionsId, index } = useParams();
-  const questionIndex = index ? parseInt(index, 10) : 0;
-  const navigate = useNavigate();
+  const { cid, qid } = useParams();
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [question, setQuestion] = useState<Question | null>(null);
+  const [editingQuestionIndex, setEditingQuestionIndex] = useState<
+    number | null
+  >(null);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   useEffect(() => {
     if (qid !== "new" && qid !== undefined) {
@@ -70,13 +73,11 @@ export default function EditQuestions() {
       client.createQuiz(cid, newQuiz).then((quiz) => {
         dispatch(addQuiz(quiz));
         dispatch(setQuiz(quiz));
-        navigate(`/Kanbas/Courses/${cid}/Quizzes/`);
       });
     } else if (cid !== undefined) {
       client.createQuiz(cid, newQuiz).then((quiz) => {
         dispatch(addQuiz(quiz));
         dispatch(setQuiz(quiz));
-        navigate(`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`);
       });
     }
   };
@@ -88,19 +89,9 @@ export default function EditQuestions() {
       points: calculatePoints(questions),
     };
     dispatch(setQuiz(newQuiz));
-    if (published) {
-      dispatch(setQuiz(newQuiz));
-      client.updateQuiz(newQuiz).then(() => {
-        dispatch(updateQuiz(newQuiz));
-        navigate(`/Kanbas/Courses/${cid}/Quizzes/`);
-      });
-    } else {
-      client.updateQuiz(newQuiz).then(() => {
-        dispatch(updateQuiz(newQuiz));
-        dispatch(setQuiz(newQuiz));
-        navigate(`/Kanbas/Courses/${cid}/Quizzes/${newQuiz._id}`);
-      });
-    }
+    client.updateQuiz(newQuiz).then(() => {
+      dispatch(updateQuiz(newQuiz));
+    });
   };
 
   const handleSave = (published: any) => {
@@ -111,8 +102,29 @@ export default function EditQuestions() {
     }
   };
 
-  const handleNavigate = (index: number) => {
-    navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Question/${index}`);
+  const handleEditQuestion = (index: number) => {
+    setEditingQuestionIndex(index);
+    setIsEditing(true);
+  };
+
+  const handleAddNewQuestion = () => {
+    setEditingQuestionIndex(null);
+    setIsEditing(true);
+  };
+
+  const handleSaveQuestion = (savedQuestion: Question) => {
+    const updatedQuestions = [...questions];
+    if (editingQuestionIndex !== null) {
+      updatedQuestions[editingQuestionIndex] = savedQuestion;
+    } else {
+      updatedQuestions.push(savedQuestion);
+    }
+    setQuestions(updatedQuestions);
+    setIsEditing(false);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
   };
 
   return (
@@ -153,55 +165,81 @@ export default function EditQuestions() {
       </div>
       <br />
 
-      <div style={{ marginLeft: "150px", marginRight: "150px" }}>
-        {questions.map((question, index) => (
-          <div
-            key={index}
-            className="mx-3 mb-4 border border-secondary"
-            style={{ padding: "0", position: "relative", width: "100%" }}
-          >
+      {!isEditing && (
+        <div style={{ marginLeft: "150px", marginRight: "150px" }}>
+          {questions.map((question, index) => (
             <div
-              className="p-3 border-bottom border-secondary"
-              style={{ backgroundColor: "#f5f5f5", width: "100%" }}
+              key={index}
+              className="mx-3 mb-4 border border-secondary"
+              style={{ padding: "0", position: "relative", width: "100%" }}
             >
-              <div className="float-end font-color-secondary">
-                {question.points} pts
+              <div
+                className="p-3 border-bottom border-secondary"
+                style={{ backgroundColor: "#f5f5f5", width: "100%" }}
+              >
+                <div className="float-end font-color-secondary">
+                  {question.points} pts
+                </div>
+                <div className="fw-bold">Question {index + 1}</div>
               </div>
-              <div className="fw-bold">Question {index + 1}</div>
-            </div>
 
-            <div style={{ width: "100%" }}>
-              <div id="question-description" className="p-3 my-3">
-                {question.question}
-                <button
-                  className="btn btn-danger btn-sm float-end"
-                  onClick={() => handleNavigate(questionIndex)}
-                  style={{
-                    position: "absolute",
-                    right: "20px",
-                    bottom: "15px",
-                  }}
-                >
-                  Edit
-                </button>
+              <div style={{ width: "100%" }}>
+                <div id="question-description" className="p-3 my-3">
+                  {question.question}
+                  <button
+                    className="btn btn-danger btn-sm float-end"
+                    onClick={() => handleEditQuestion(index)}
+                    style={{
+                      position: "absolute",
+                      right: "20px",
+                      bottom: "15px",
+                    }}
+                  >
+                    Edit
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
+
+      {isEditing && (
+        <div style={{ marginLeft: "150px", marginRight: "150px" }}>
+          <QuestionForm
+            initialQuestion={
+              editingQuestionIndex !== null
+                ? questions[editingQuestionIndex]
+                : {
+                    type: QuestionType.multipleChoice,
+                    title: "",
+                    points: 0,
+                    question: "",
+                    true_or_false: true,
+                    choices: [],
+                    blank: [],
+                  }
+            }
+            onSave={handleSaveQuestion}
+            onCancel={handleCancelEdit}
+          />
+        </div>
+      )}
 
       <br />
-      <div className="button-container">
-        <Link to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/Question/new`}>
+      {!isEditing && (
+        <div className="button-container">
           <button
             className="btn border-bottom border-secondary "
             style={{ backgroundColor: "#f5f5f5", margin: "10px 0" }}
+            onClick={handleAddNewQuestion}
           >
             <FaPlus aria-hidden="true" />
             New Question
           </button>
-        </Link>
-      </div>
+        </div>
+      )}
+
       <br />
       <hr />
       <br />
