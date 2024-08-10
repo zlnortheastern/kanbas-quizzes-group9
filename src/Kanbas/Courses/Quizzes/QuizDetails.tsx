@@ -1,46 +1,61 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useParams,useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getQuizById } from './client'; 
 import { setQuizzes } from './reducer';
 import { FaPencil } from "react-icons/fa6";
-import { getAnswersByUser } from './client';
-import { useAuth } from '../../Authentication/AuthProvider'; 
-import { Answers} from "./interface";
+import * as client from "./client";
+import AnswerHistory from './StudentView/AnswerHistory';
+import { Quiz, Question, Answer, Choice, QuestionType, Answers } from './interface'; 
+import { useAuth, useUserRole } from '../../Authentication/AuthProvider';
 
 export default function QuizDetails() {
   const navigate = useNavigate();
   const { cid, qid } = useParams();
   const auth = useAuth();
   const userId = auth.token;
+  const role = useUserRole();
   const dispatch = useDispatch();
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [answer, setAnswer] = useState<Answers>();
+    
   const quiz = useSelector((state: any) =>
     state.quizzesReducer.quizzes.find((q: any) => q._id === qid)
   );
-  // console.log("quiz: " + quiz);
+  useEffect(() => {
+    const fetchQuestionsAndAnswers = async () => {
+      if (qid) {
+        try {
+          const questionsData = await client.getQuestionsByQuiz(qid);
+          setQuestions(questionsData.questions);
+          fetchAnswer();
+        } catch (error: any) {
+          if (error.response && error.response.status === 404) {
+            console.error('questions not found');
+            setQuestions([]); 
+          } else {
+            console.error('Failed to fetch questions:', error);
+          }
+        }
+      }
+    };
+
+    const fetchAnswer = async () => {
+      if (qid && role === "FACULTY") {
+        const latestAnswer = await client.getLatestAnswerByUser(qid, userId);
+        setAnswer(latestAnswer || null); 
+      }
+    };
+
+    fetchQuestionsAndAnswers();
+  }, [qid, role, userId]);
   
   const handlePreviewClick = async () => {
     if (!qid || !userId) {
       console.error('Quiz ID or User ID is undefined');
       return;
     }
-    try {
-      const answers = await getAnswersByUser(qid, userId);
-      
-      if (answers && answers.length > 0) {
-        answers.sort(
-          (a: Answers, b: Answers) => +new Date(b.submit_time) - +new Date(a.submit_time)
-        );
-        const newestAnswerId = answers[0]._id; 
-        navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/Answer/${newestAnswerId}`);
-        console.log("Found answers by getAnswersByUser so go back to the attempt page.")
-      } else {
-        navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview`);
-      }
-    } catch (error) {
-      console.error('Error fetching answers:', error);
-      navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview`);
-    }
+    navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview`);
   };
   
   useEffect(() => {
@@ -131,6 +146,13 @@ export default function QuizDetails() {
           </tr>
         </tbody>
       </table>
+      {answer && (
+        <AnswerHistory 
+          answer={answer}
+          questions={questions}
+          showCorrect={true}
+        />
+      )}
     </div>
   );
 }

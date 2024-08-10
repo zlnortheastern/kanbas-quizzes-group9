@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Quiz, Question, Answer, Choice, QuestionType } from './interface'; 
+import { Quiz, Question, Answer, Choice, QuestionType, Answers } from './interface'; 
 import * as client from "./client";
 import { useAuth, useUserRole } from '../../Authentication/AuthProvider';
 import { CgDanger } from "react-icons/cg";
@@ -41,14 +41,7 @@ export default function QuizPreview() {
         try {
           const questionsData = await client.getQuestionsByQuiz(qid);
           setQuestions(questionsData.questions);
-          const initialAnswers = questionsData.questions.map((question: Question) => ({
-            type: question.type,
-            score: 0,
-            true_or_false: undefined,
-            choice: -1,
-            blank: "",
-          }));
-          setAnswers(initialAnswers);
+          fetchAnswers();
         } catch (error: any) {
           if (error.response && error.response.status === 404) {
             console.error('Questions not found');
@@ -59,23 +52,59 @@ export default function QuizPreview() {
         }
       }
     };
+
+    const initializeAnswers = (questions: Question[]): Answer[] => {
+      return questions.map((question: Question) => ({
+        type: question.type,
+        score: 0,
+        true_or_false: undefined,
+        choice: -1,
+        blank: "",
+      }));
+    };
     
-    useEffect(() => {
-        if (!qid || !userId) {
-            console.error('Quiz ID or User ID is undefined');
-            return;
+   // Fetch answers based on the user's role
+    const fetchAnswers = async () => {
+      if (qid) {
+        if (role === "FACULTY") {
+          const latestAnswer = await client.getLatestAnswerByUser(qid, userId);
+          // console.log('Latest answers fetched for faculty:', latestAnswer);
+          if (latestAnswer) {
+            console.log('Latest answers fetched for faculty:', latestAnswer);
+            setAnswers(latestAnswer.answers);
+          } else {
+            const initializedAnswers = initializeAnswers(questions);
+            setAnswers(initializedAnswers);
+          }
+        } else if (role === "STUDENT") {
+          const initializedAnswers = initializeAnswers(questions);
+          setAnswers(initializedAnswers);
         }
+      }
+    };
 
-        fetchQuiz();
-        fetchQuestions();
-        setStartTime(formattedTime);
-      
-        const timer = setInterval(() => {
-            setTimeElapsed(prev => prev + 1);
-        }, 1000);
+    useEffect(() => {
+      if (!qid || !userId) {
+        console.error('Quiz ID or User ID is undefined');
+        return;
+      }
+    
+      fetchQuiz();
+      fetchQuestions();
+      setStartTime(formattedTime);
+    
+      const timer = setInterval(() => {
+        setTimeElapsed(prev => prev + 1);
+      }, 1000);
+    
+      return () => clearInterval(timer);
+    }, [qid, userId, role]);
 
-        return () => clearInterval(timer);
-    }, [qid, userId]);
+    
+  
+    
+  
+  
 
     if (!quiz) return <div>Loading...no such quiz</div>;
     if (!questions || questions.length === 0) return <div>Questions is [].</div>;
@@ -128,6 +157,10 @@ export default function QuizPreview() {
 
 
     const isQuestionAnswered = (answer: Answer) => {
+        if (!answer || !answer.type) {
+          console.warn('Answer is undefined or missing type:', answer); // Debug log
+          return false;
+        }
         if (answer.type === QuestionType.trueOrFalse) {
             return answer.true_or_false !== undefined;
         }
@@ -139,6 +172,7 @@ export default function QuizPreview() {
         }
         return false;
     };
+    
 
     return (
         <div className="container quiz-preview">
@@ -164,6 +198,7 @@ export default function QuizPreview() {
                         </div>
                         <div className="card-body">
                           <p>{currentQuestion.question}</p>
+                   
                           
                           {currentQuestion.type === 'TRUE_OR_FALSE' && (
                               <div>
