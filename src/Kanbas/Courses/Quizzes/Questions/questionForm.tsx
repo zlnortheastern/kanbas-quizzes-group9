@@ -157,9 +157,9 @@ export default function QuestionForm({
             type="text"
             value={question.title}
             onChange={(e) =>
-              dispatch(setQuestion({ ...question, title: e.target.value }))
+              setLocalQuestion({ ...question, title: e.target.value })
             }
-            className="form-control"
+            className="form-control "
             style={{ width: `${question.title.length || 10}ch` }}
           />
         </div>
