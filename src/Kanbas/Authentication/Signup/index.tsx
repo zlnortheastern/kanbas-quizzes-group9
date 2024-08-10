@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as client from "../client";
+import { useAuth } from "../AuthProvider";
 export default function Signup() {
   const [user, setUser] = useState({
     username: "",
@@ -13,10 +14,15 @@ export default function Signup() {
   });
   const [errorMessage, setErrorMessage] = useState<any>(null);
   const navigate = useNavigate();
+  const auth = useAuth();
   const createUser = async (newUser: any) => {
     try {
       const user = await client.createUser(newUser);
-      navigate("/Kanbas/Login");
+      await auth.login({
+        username: newUser.username,
+        password: newUser.password,
+      });
+      navigate("/Kanbas/Account");
     } catch (error: any) {
       setErrorMessage(error.message);
     }

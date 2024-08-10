@@ -4,40 +4,22 @@ import { useAuth } from "../AuthProvider";
 import * as client from "../client";
 import { GrEdit } from "react-icons/gr";
 export default function Account() {
-  const [user, setUser] = useState({
-    username: "",
-    password: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    dob: "",
-    role: "",
-    image: "",
-  });
+  const [user, setUser] = useState<any>();
 
-  const [updateUser, setUpdateUser] = useState({
-    username: "",
-    password: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    dob: "",
-    role: "",
-    image: "",
-  });
+  const [updateUser, setUpdateUser] = useState<any>();
   const [editing, setEditing] = useState(false);
 
   const auth = useAuth();
 
   const fetchUser = async () => {
     const data = await client.getUser(auth.token);
-    setUpdateUser({ ...updateUser, ...data });
-    setUser({ ...user, ...data });
+    setUpdateUser(data);
+    setUser(data);
   };
 
   const handleInput = (e: any) => {
     const { name, value } = e.target;
-    setUpdateUser((prev) => ({
+    setUpdateUser((prev: any) => ({
       ...prev,
       [name]: value,
     }));
@@ -58,6 +40,8 @@ export default function Account() {
   useEffect(() => {
     fetchUser();
   }, []);
+
+  if (!user && !updateUser) return <></>;
   return (
     <div>
       <h2>

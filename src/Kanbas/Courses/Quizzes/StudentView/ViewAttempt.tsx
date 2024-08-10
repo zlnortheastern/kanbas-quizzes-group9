@@ -54,15 +54,16 @@ export default function ViewAttempt() {
   let displayAnswer = true;
 
   if (
-    quiz?.showCorrectAnswers === ShowAnswerType.after_due_date &&
-    currentTime < dueDateTime
+    (quiz?.showCorrectAnswers === ShowAnswerType.after_due_date &&
+      currentTime > dueDateTime) ||
+    quiz?.showCorrectAnswers === ShowAnswerType.immediately
   ) {
     displayAnswer = false;
   } else if (quiz?.showCorrectAnswers === ShowAnswerType.never) {
     displayQuestion = false;
   }
 
-  if (!quiz || !questions || !answers ) return <></>;
+  if (!quiz || !questions || !answers) return <></>;
   return (
     <div className="row">
       <div className="col-9">
