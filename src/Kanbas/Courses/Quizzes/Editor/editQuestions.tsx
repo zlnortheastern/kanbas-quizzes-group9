@@ -14,7 +14,7 @@ export default function EditQuestions() {
   const quiz = useSelector((state: any) => state.quizzesReducer.quiz);
 
   const dispatch = useDispatch();
-  const { cid, qid } = useParams();
+  const { cid, qid = "" } = useParams();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [editingQuestionIndex, setEditingQuestionIndex] = useState<
     number | null
@@ -62,36 +62,55 @@ export default function EditQuestions() {
     return totalPoints;
   };
 
-  const handleAddQuiz = (published: any) => {
+  const handleAddQuiz = async (published: boolean) => {
     const newQuiz = {
       ...quiz,
       published: published,
       points: calculatePoints(questions),
     };
-    dispatch(setQuiz(newQuiz));
-    if (published && cid !== undefined) {
-      client.createQuiz(cid, newQuiz).then((quiz) => {
-        dispatch(addQuiz(quiz));
-        dispatch(setQuiz(quiz));
-      });
-    } else if (cid !== undefined) {
-      client.createQuiz(cid, newQuiz).then((quiz) => {
-        dispatch(addQuiz(quiz));
-        dispatch(setQuiz(quiz));
-      });
+    if (cid) {
+      try {
+        const createdQuiz = await client.createQuiz(cid, newQuiz);
+        dispatch(addQuiz(createdQuiz));
+        dispatch(setQuiz(createdQuiz));
+
+        for (const question of questions) {
+          await client.addQuestionToQuiz(createdQuiz._id, question);
+        }
+
+        const updatedQuestions = await client.getQuestionsByQuiz(
+          createdQuiz._id
+        );
+        if (updatedQuestions && Array.isArray(updatedQuestions.questions)) {
+          setQuestions(updatedQuestions.questions);
+        }
+      } catch (error) {
+        console.error("Error adding quiz:", error);
+      }
     }
   };
 
-  const handleUpdateQuiz = (published: any) => {
-    const newQuiz = {
+  const handleUpdateQuiz = async (published: boolean) => {
+    const updatedQuiz = {
       ...quiz,
-      published: published,
+      published,
       points: calculatePoints(questions),
     };
-    dispatch(setQuiz(newQuiz));
-    client.updateQuiz(newQuiz).then(() => {
-      dispatch(updateQuiz(newQuiz));
-    });
+    dispatch(setQuiz(updatedQuiz));
+    try {
+      await client.updateQuiz(updatedQuiz);
+      for (let index = 0; index < questions.length; index++) {
+        const question = questions[index];
+        if (index < questions.length) {
+          await client.updateQuestion(updatedQuiz._id, question, index);
+        } else {
+          await client.addQuestionToQuiz(updatedQuiz._id, question);
+        }
+      }
+      dispatch(updateQuiz(updatedQuiz));
+    } catch (error) {
+      console.error("Error updating quiz and questions:", error);
+    }
   };
 
   const handleSave = (published: any) => {
@@ -112,18 +131,25 @@ export default function EditQuestions() {
     setIsEditing(true);
   };
 
-  const handleSaveQuestion = (savedQuestion: Question) => {
-    const updatedQuestions = [...questions];
-    if (editingQuestionIndex !== null) {
-      updatedQuestions[editingQuestionIndex] = savedQuestion;
-    } else {
-      updatedQuestions.push(savedQuestion);
-    }
-    setQuestions(updatedQuestions);
+  const handleCancelEdit = () => {
     setIsEditing(false);
   };
 
-  const handleCancelEdit = () => {
+  const handleSaveQuestion = async (savedQuestion: Question) => {
+    let updatedQuestions = [...questions];
+
+    if (editingQuestionIndex !== null) {
+      await client.updateQuestion(qid, savedQuestion, editingQuestionIndex);
+      updatedQuestions[editingQuestionIndex] = savedQuestion;
+    } else {
+      const createdQuestion = await client.addQuestionToQuiz(
+        qid,
+        savedQuestion
+      );
+      updatedQuestions.push(createdQuestion);
+    }
+
+    setQuestions(updatedQuestions);
     setIsEditing(false);
   };
 
