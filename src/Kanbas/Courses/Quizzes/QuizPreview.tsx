@@ -209,20 +209,26 @@ export default function QuizPreview() {
                                           className="form-check-input"
                                           type="radio"
                                           name={`trueOrFalse-${currentQuestionIndex}`}
+                                          id={`true-${currentQuestionIndex}`}
                                           checked={answers[currentQuestionIndex]?.true_or_false === true}
                                           onChange={() => handleAnswerChange(currentQuestionIndex, { type: QuestionType.trueOrFalse, true_or_false: true })}
                                       />
-                                      <label className="form-check-label">True</label>
+                                      <label className="form-check-label" htmlFor={`true-${currentQuestionIndex}`}>
+                                        True
+                                      </label>
                                   </div>
                                   <div className="form-check border-top py-2">
                                       <input
                                           className="form-check-input"
                                           type="radio"
                                           name={`trueOrFalse-${currentQuestionIndex}`}
+                                          id={`false-${currentQuestionIndex}`}
                                           checked={answers[currentQuestionIndex]?.true_or_false === false}
                                           onChange={() => handleAnswerChange(currentQuestionIndex, { type: QuestionType.trueOrFalse, true_or_false: false })}
                                       />
-                                      <label className="form-check-label">False</label>
+                                      <label className="form-check-label" htmlFor={`false-${currentQuestionIndex}`}>
+                                        False
+                                      </label>
                                   </div>
                               </div>
                           )}
@@ -234,10 +240,13 @@ export default function QuizPreview() {
                                     className="form-check-input"
                                     type="radio"
                                     name={`multipleChoice-${currentQuestionIndex}`}
+                                    id={`multipleChoice-${currentQuestionIndex}-${index}`}  
                                     checked={answers[currentQuestionIndex]?.choice === index}
                                     onChange={() => handleAnswerChange(currentQuestionIndex, { type: QuestionType.multipleChoice, choice: index })}
                                   />
-                                  <label className="form-check-label">{choice.choice}</label>
+                                  <label className="form-check-label" htmlFor={`multipleChoice-${currentQuestionIndex}-${index}`}>
+                                    {choice.choice}
+                                  </label>
                                 </div>
                               ))}
                           </div>

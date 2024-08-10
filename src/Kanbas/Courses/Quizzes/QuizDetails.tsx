@@ -128,7 +128,7 @@ export default function QuizDetails() {
             ))}
         </ul>
       </div>
-      <table className="table mt-4 pe-4">
+      <table className="table mt-4 pe-4 mb-4">
         <thead>
           <tr>
             <th>Due</th>
