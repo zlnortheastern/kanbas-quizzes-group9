@@ -16,3 +16,9 @@
 .bg-color-lightgray {
   background-color: lightgray;
 }
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
