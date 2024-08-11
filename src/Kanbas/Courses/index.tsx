@@ -40,7 +40,7 @@ export default function Courses({ courses }: { courses: any[] }) {
             <Route path="Assignments" element={<Assignments />} />
             <Route path="Assignments/:aid" element={<AssignmentEditor />} />
             <Route path="Grades" element={<Grades />} />
-            <Route path="Quizzes" element={<Quizzes role={role} />} />
+            <Route path="Quizzes" element={<Quizzes />} />
             <Route
               path="Quizzes/:qid"
               element={role === "FACULTY" ? <QuizDetails /> : <QuizStudent />}

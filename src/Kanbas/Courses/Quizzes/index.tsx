@@ -15,7 +15,7 @@ import { formatDate } from "../../util";
 import { Answers } from "./interface";
 import { useAuth } from "../../Authentication/AuthProvider";
 
-export default function Quizzes({ role }: { role: string }) {
+export default function Quizzes() {
   const { cid } = useParams();
   const { quizzes } = useSelector((state: any) => state.quizzesReducer);
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ export default function Quizzes({ role }: { role: string }) {
 
   const auth = useAuth();
   const userId = auth.token;
-
+  const role = useUserRole();
   const fetchQuizzes = async () => {
     const quizzes = await client.findQuizzesForCourse(cid as string);
     const quizData: {
@@ -146,7 +146,7 @@ export default function Quizzes({ role }: { role: string }) {
 
   useEffect(() => {
     fetchQuizzes();
-  }, []);
+  }, [role]);
 
   if (Object.keys(quizData).length < 1) return <div>Loading...</div>;
   return (
