@@ -58,32 +58,34 @@ export default function Quizzes() {
 
       for (let quiz of publishedQuizzes) {
         const questionSet = await client.getQuestionsByQuiz(quiz._id);
-        const questionCount = questionSet.questions
-          ? questionSet.questions.length
-          : -1;
+        if (questionSet) {
+          const questionCount = questionSet.questions
+            ? questionSet.questions.length
+            : -1;
 
-        let score = null;
-        let total = null;
+          let score = null;
+          let total = null;
 
-        if (questionCount !== -1) {
-          const result = await getLatestAnswerScoreAndTotal(quiz._id, userId);
-          if (result) {
-            score = result.score;
-            total = result.total;
-          } else {
-            score = -1;
-            total = -1;
+          if (questionCount !== -1) {
+            const result = await getLatestAnswerScoreAndTotal(quiz._id, userId);
+            if (result) {
+              score = result.score;
+              total = result.total;
+            } else {
+              score = -1;
+              total = -1;
+            }
           }
+
+          quizData[quiz._id] = {
+            questionCount,
+            score,
+            total,
+          };
         }
 
-        quizData[quiz._id] = {
-          questionCount,
-          score,
-          total,
-        };
+        dispatch(setQuizzes(publishedQuizzes));
       }
-
-      dispatch(setQuizzes(publishedQuizzes));
     }
 
     // 保存 quizData
