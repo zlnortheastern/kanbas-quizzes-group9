@@ -32,17 +32,102 @@ export const getQuizById = async (id: string) => {
   return response.data;
 };
 
+export const getAnswersByUser = async (qid: string, uid: string) => {
+  const response = await axios.get(
+    `${QUIZZES_API}/${qid}/users/${uid}/answers`
+  );
+  return response.data;
+};
+
 export const getQuestionsByQuiz = async (qid: string) => {
   const response = await axios.get(`${QUIZZES_API}/${qid}/questions`);
   return response.data;
 };
+
 export const getQuestions = async (qid: string) => {
   const response = await axios.get(`${QUESTIONS_API}/${qid}`);
   return response.data;
 };
-export const getAnswersByUser = async (qid: string, uid: string) => {
+
+export const getQuestionByIndex = async (
+  quizId: string,
+  questionIndex: number
+) => {
   const response = await axios.get(
-    `${QUIZZES_API}/${qid}/users/${uid}/answers`
+    `${QUESTIONS_API}/${quizId}/question/${questionIndex}`
+  );
+  return response.data;
+};
+
+export const addQuestionToQuiz = async (quizId: string, newQuestion: any) => {
+  const response = await axios.post(
+    `${QUESTIONS_API}/${quizId}/add`,
+    newQuestion
+  );
+  return response.data;
+};
+
+export const updateQuestion = async (
+  quizId: string,
+  question: any,
+  index: number
+) => {
+  const response = await axios.put(
+    `${QUESTIONS_API}/${quizId}/update/${index}`,
+    question
+  );
+  return response.data;
+};
+
+export const deleteQuestion = async (quizId: string, questionIndex: number) => {
+  const response = await axios.delete(
+    `${QUESTIONS_API}/${quizId}/delete/${questionIndex}`
+  );
+  return response.data;
+};
+
+export const addChoiceToQuestion = async (
+  quizId: string,
+  questionIndex: number,
+  newChoice: any
+) => {
+  const response = await axios.post(
+    `${QUESTIONS_API}/${quizId}/question/${questionIndex}/choices`,
+    newChoice
+  );
+  return response.data;
+};
+
+export const deleteChoiceFromQuestion = async (
+  quizId: string,
+  questionIndex: number,
+  choiceId: any
+) => {
+  const response = await axios.delete(
+    `${QUESTIONS_API}/${quizId}/question/${questionIndex}/choices/${choiceId}`
+  );
+  return response.data;
+};
+
+export const addBlankToQuestion = async (
+  quizId: string,
+  questionIndex: number,
+  newAnswer: any
+) => {
+  const response = await axios.post(
+    `${QUESTIONS_API}/${quizId}/question/${questionIndex}/blank`,
+    { answer: newAnswer }
+  );
+  return response.data;
+};
+
+export const deleteBlankFromQuestion = async (
+  quizId: string,
+  questionIndex: number,
+  answer: any
+) => {
+  const response = await axios.delete(
+    `${QUESTIONS_API}/${quizId}/question/${questionIndex}/blank/${answer}`
   );
   return response.data;
 };

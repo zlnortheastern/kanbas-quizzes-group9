@@ -47,11 +47,13 @@ export interface Question {
   choices?: Choice[];
   blank?: string[];
 }
+
 export interface Questions {
   _id: string;
   quiz: string;
   questions: Question[];
 }
+
 export interface Answer {
   type: QuestionType;
   score: number;
