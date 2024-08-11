@@ -36,7 +36,7 @@ export default function StudentAnswerView({
                   to={`Answer/${answers[index]._id}`}
                   className="text-decoration-none text-danger"
                 >
-                  Attempt {index + 1}
+                  Attempt {answers.length - index}
                 </Link>
               </td>
               <td>{formatTime(answer.time_used)}</td>

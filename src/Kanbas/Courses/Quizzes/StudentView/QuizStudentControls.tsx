@@ -21,12 +21,7 @@ export default function QuizStudentControls({
   if (availableTime < currentTime && currentTime < untilTime) {
     return (
       <div>
-        {quiz?.description && (
-          <>
-            <h2 className="mb-4">Instructions</h2>
-            <p className="mb-5">{quiz.description}</p>
-          </>
-        )}
+        {quiz?.description && <p className="mb-5">{quiz.description}</p>}
         <div className="text-center">
           {canAnswer && (
             <Link

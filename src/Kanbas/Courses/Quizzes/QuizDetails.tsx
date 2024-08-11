@@ -1,18 +1,64 @@
-import React, { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useParams,useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getQuizById } from './client'; 
 import { setQuizzes } from './reducer';
 import { FaPencil } from "react-icons/fa6";
+import * as client from "./client";
+import AnswerHistory from './StudentView/AnswerHistory';
+import { Quiz, Question, Answer, Choice, QuestionType, Answers } from './interface'; 
+import { useAuth, useUserRole } from '../../Authentication/AuthProvider';
 
 export default function QuizDetails() {
-  const { qid } = useParams<{ qid: string }>();
-  console.log("qid: " + qid);
+  const navigate = useNavigate();
+  const { cid, qid } = useParams();
+  const auth = useAuth();
+  const userId = auth.token;
+  const role = useUserRole();
   const dispatch = useDispatch();
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [answer, setAnswer] = useState<Answers>();
+    
   const quiz = useSelector((state: any) =>
     state.quizzesReducer.quizzes.find((q: any) => q._id === qid)
   );
-  console.log("quiz: " + quiz);
+  useEffect(() => {
+    const fetchQuestionsAndAnswers = async () => {
+      if (qid) {
+        try {
+          const questionsData = await client.getQuestionsByQuiz(qid);
+          setQuestions(questionsData.questions);
+          fetchAnswer();
+        } catch (error: any) {
+          if (error.response && error.response.status === 404) {
+            console.error('questions not found');
+            setQuestions([]); 
+          } else {
+            console.error('Failed to fetch questions:', error);
+          }
+        }
+      }
+    };
+
+    const fetchAnswer = async () => {
+      if (qid && role === "FACULTY") {
+        const latestAnswer = await client.getLatestAnswerByUser(qid, userId);
+        // console.log('Latest answers fetched for faculty in QUIZ DETAILS page:', latestAnswer);
+
+        setAnswer(latestAnswer || null); 
+      }
+    };
+
+    fetchQuestionsAndAnswers();
+  }, [qid, role, userId]);
+  
+  const handlePreviewClick = async () => {
+    if (!qid || !userId) {
+      console.error('Quiz ID or User ID is undefined');
+      return;
+    }
+    navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/preview`);
+  };
   
   useEffect(() => {
     if (!quiz) {
@@ -47,12 +93,17 @@ export default function QuizDetails() {
   return (
     <div className="container mt-5">
       <div className="d-flex justify-content-center mb-4">
-        <Link to={`preview`} className="btn btn-secondary me-2">Preview</Link>
+        <button 
+          onClick={handlePreviewClick} 
+          className="btn btn-secondary me-2" 
+          id="wd-quiz-preview-btn"
+        >
+          Preview
+        </button>
         <Link  to={`edit`} className="btn btn-secondary"id="wd-quiz-edit-btn" >
-          <FaPencil className="position-relative me-2" style={{transform: 'rotate(270deg)', bottom: "2px"}}  />
-          Edit
-        </Link>
-        
+            <FaPencil className="position-relative me-2" style={{transform: 'rotate(270deg)', bottom: "2px"}}  />
+            Edit
+        </Link>        
       </div>
       <hr/>
       <h1 className="text-start pe-3 mt-2">{quiz.title}</h1>
@@ -79,7 +130,7 @@ export default function QuizDetails() {
             ))}
         </ul>
       </div>
-      <table className="table mt-4 pe-4">
+      <table className="table mt-4 pe-4 mb-4">
         <thead>
           <tr>
             <th>Due</th>
@@ -97,6 +148,13 @@ export default function QuizDetails() {
           </tr>
         </tbody>
       </table>
+      {answer && (
+        <AnswerHistory 
+          answer={answer}
+          questions={questions}
+          showCorrect={true}
+        />
+      )}
     </div>
   );
 }

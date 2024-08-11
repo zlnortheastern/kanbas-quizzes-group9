@@ -31,6 +31,7 @@ export default function Dashboard({
     fetchEnrollments(auth.token);
   }, [courses]);
 
+  if (!role) return <></>;
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1>

@@ -54,8 +54,9 @@ export default function ViewAttempt() {
   let displayAnswer = true;
 
   if (
-    quiz?.showCorrectAnswers === ShowAnswerType.after_due_date &&
-    currentTime < dueDateTime
+    (quiz?.showCorrectAnswers === ShowAnswerType.after_due_date &&
+      currentTime > dueDateTime) ||
+    quiz?.showCorrectAnswers === ShowAnswerType.immediately
   ) {
     displayAnswer = false;
   } else if (quiz?.showCorrectAnswers === ShowAnswerType.never) {
@@ -106,7 +107,7 @@ export default function ViewAttempt() {
                 <Link
                   to={`../Quizzes/${qid}/Answer/${answer._id}`}
                   className="text-decoration-none text-danger fw-bold"
-                >{`Attempt ${index + 1}: ${answer.score}`}</Link>
+                >{`Attempt ${answers.length - index}: ${answer.score}`}</Link>
               </div>
             ))}
           </div>

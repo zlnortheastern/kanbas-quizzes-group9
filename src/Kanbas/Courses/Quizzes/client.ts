@@ -131,3 +131,14 @@ export const deleteBlankFromQuestion = async (
   );
   return response.data;
 };
+
+export const getLatestAnswerByUser = async (quizId: string, userId: string) => {
+  const response = await axios.get(`${QUIZZES_API}/${quizId}/users/${userId}/answers?latest=true`);
+  return await response.data;
+};
+
+
+export const submitQuizAnswers = async (quizId: string, userId: string, answerSet: any) => {
+  const response = await axios.post(`${QUIZZES_API}/${quizId}/users/${userId}/answers`, answerSet);
+  return response.data;
+};
