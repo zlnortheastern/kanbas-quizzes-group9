@@ -160,7 +160,7 @@ export default function QuestionForm({
               setLocalQuestion({ ...question, title: e.target.value })
             }
             className="form-control "
-            style={{ width: `${question.title.length || 10}ch` }}
+            //style={{ width: `${question.title.length || 10}ch` }}
           />
         </div>
         <div className="col-3">
