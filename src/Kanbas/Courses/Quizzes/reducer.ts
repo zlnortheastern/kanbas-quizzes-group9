@@ -30,6 +30,7 @@ const initialState: QuizzesState = {
     lastModified: "",
     course: "course id",
     published: false,
+
   },
 };
 
