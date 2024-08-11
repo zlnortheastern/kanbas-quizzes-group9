@@ -61,7 +61,7 @@ export default function TOC() {
       <li className="nav-item">
         <a
           id="wd-github"
-          href="https://github.com/zlnortheastern/kanbas-react-web-app"
+          href="https://github.com/zlnortheastern/kanbas-quizzes-group9"
           target="_blank"
           className="nav-link"
         >
@@ -72,7 +72,7 @@ export default function TOC() {
       <li className="nav-item">
         <a
           id="wd-github"
-          href="https://github.com/zlnortheastern/kanbas-node-server-app/tree/a5"
+          href="https://github.com/zlnortheastern/kanbas-quizzes-server"
           target="_blank"
           className="nav-link"
         >
@@ -83,7 +83,7 @@ export default function TOC() {
       <li className="nav-item">
         <a
           id="wd-github"
-          href="https://kanbas-node-server-app-vhdg.onrender.com"
+          href="https://kanbas-quizzes-server.onrender.com/"
           target="_blank"
           className="nav-link"
         >
