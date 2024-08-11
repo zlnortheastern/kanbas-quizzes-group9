@@ -116,7 +116,7 @@ const RedirectLogOut = () => {
 };
 const RedirectLogIn = () => {
   const user = useAuth();
-  if (user.token) return <Navigate to="Dashboard" />;
+  if (user.token) return <Navigate to="Account" />;
   return <Outlet />;
 };
 const RedirectRegistration = () => {
