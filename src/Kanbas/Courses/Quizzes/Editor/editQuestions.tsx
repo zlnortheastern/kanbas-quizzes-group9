@@ -31,7 +31,6 @@ export default function EditQuestions({
   useEffect(() => {
     setQuestionList(
       questionSet.questions.map((question, index) => {
-        console.log(index);
         return (
           <QuestionForm
             index={index}

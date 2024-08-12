@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Questions, Quiz, ShowAnswerType } from "../interface";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import * as client from "../client";
 import { FaBan } from "react-icons/fa";
 import { IoEllipsisVertical } from "react-icons/io5";
@@ -8,6 +8,7 @@ import EditDetails from "./editDetails";
 import EditQuestions from "./editQuestions";
 import { Link } from "react-router-dom";
 import { calculateQuizPoints } from "../../../util";
+import GreenCheckmark from "../../Modules/GreenCheckmark";
 
 const initialQuiz = {
   _id: "",
@@ -44,6 +45,7 @@ export default function Editor() {
   const [questionSet, setQuestionSet] = useState<Questions>(initialQuestionSet);
   const [isDetails, setIsDetail] = useState<boolean>(true);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const fetchQuiz = async () => {
     if (qid !== "new") {
@@ -60,8 +62,23 @@ export default function Editor() {
     setLoading(false);
   };
 
-  const handleSave = (published: any) => {
-    console.log(quiz, questionSet);
+  const handleSave = async (published: any) => {
+    if (qid) {
+      if (qid === "new") {
+        await client.createQuizAndQuestion(
+          qid,
+          { ...quiz, published: published },
+          questionSet
+        );
+      } else {
+        await client.updateQuizAndQuestion(
+          qid,
+          { ...quiz, published: published },
+          questionSet
+        );
+      }
+    }
+    navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`);
   };
 
   const changeQuiz = (updatedQuiz: Quiz) => {
@@ -69,7 +86,6 @@ export default function Editor() {
   };
 
   const changeQuestionSet = (updatedQuestionSet: Questions) => {
-    console.log(updatedQuestionSet);
     setQuiz({ ...quiz, points: calculateQuizPoints(updatedQuestionSet) });
     setQuestionSet(updatedQuestionSet);
   };
@@ -85,7 +101,7 @@ export default function Editor() {
       <div className="float-end mt-2">
         Points {quiz ? quiz.points : 0} &nbsp; &nbsp;
         {quiz?.published ? (
-          <FaBan style={{ color: "green" }} aria-hidden="true" />
+          <GreenCheckmark aria-hidden="true" />
         ) : (
           <FaBan style={{ color: "grey" }} aria-hidden="true" />
         )}
@@ -136,7 +152,7 @@ export default function Editor() {
           Save & Publish
         </button>
         <Link
-          to={`/Kanbas/Courses/${cid}/Quizzes`}
+          to={`/Kanbas/Courses/${cid}/Quizzes/${qid}`}
           className="btn btn-secondary ms-2 mb-4 float-end"
         >
           Cancel

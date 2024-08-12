@@ -214,7 +214,7 @@ export default function EditDetails({
                     type="number"
                     className="form-control"
                     id="multipleAttempts"
-                    value={quiz.attemptLimit + 1}
+                    value={quiz.attemptLimit}
                     onChange={(e) =>
                       changeQuiz({
                         ...quiz!,
@@ -333,7 +333,7 @@ export default function EditDetails({
             </li>
             <li className="list-group-item border-0">
               <input
-                type="date"
+                type="datetime-local"
                 className="form-control"
                 id="input-4"
                 name="dueDate"
@@ -355,7 +355,7 @@ export default function EditDetails({
               <div className="row">
                 <div className="col-6">
                   <input
-                    type="date"
+                    type="datetime-local"
                     className="form-control"
                     id="input-5"
                     name="availableDate"
@@ -365,7 +365,7 @@ export default function EditDetails({
                 </div>
                 <div className="col-6">
                   <input
-                    type="date"
+                    type="datetime-local"
                     className="form-control"
                     id="input-6"
                     name="availableUntilDate"
