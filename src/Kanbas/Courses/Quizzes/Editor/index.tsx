@@ -60,7 +60,9 @@ export default function Editor() {
     setLoading(false);
   };
 
-  const handleSave = (published: any) => {};
+  const handleSave = (published: any) => {
+    console.log(quiz, questionSet);
+  };
 
   const changeQuiz = (updatedQuiz: Quiz) => {
     setQuiz(updatedQuiz);

@@ -208,24 +208,28 @@ export default function EditDetails({
               >
                 Allow Multiple Attempts
               </label>
-              <input
-                type="number"
-                className="form-control"
-                id="multipleAttempts"
-                value={quiz.attemptLimit}
-                onChange={(e) =>
-                  changeQuiz({
-                    ...quiz!,
-                    attemptLimit: Number(e.target.value),
-                  })
-                }
-                style={{
-                  width: "70px",
-                  marginRight: "5px",
-                  marginTop: "-7px",
-                }}
-              />
-              <span>Attempts</span>
+              {quiz.multipleAttempts && (
+                <>
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="multipleAttempts"
+                    value={quiz.attemptLimit + 1}
+                    onChange={(e) =>
+                      changeQuiz({
+                        ...quiz!,
+                        attemptLimit: Number(e.target.value),
+                      })
+                    }
+                    style={{
+                      width: "70px",
+                      marginRight: "5px",
+                      marginTop: "-7px",
+                    }}
+                  />
+                  <span>Attempts</span>
+                </>
+              )}
             </li>
             <li className="list-group-item border-0">
               <label htmlFor="showCorrectAnswers">Show Correct Answers</label>
