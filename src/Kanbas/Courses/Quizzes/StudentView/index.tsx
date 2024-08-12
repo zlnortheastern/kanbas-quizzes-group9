@@ -73,10 +73,20 @@ export default function QuizStudent() {
             <span className="fw-bold">Time Limit</span> {quiz?.timeLimit}{" "}
             Minutes
           </li>
-          <li className="d-inline-block me-5 mb-2">
-            <span className="fw-bold">Allowed Attempts</span>{" "}
-            {quiz?.attemptLimit}
-          </li>
+          {quiz?.multipleAttempts ? (
+            <>
+              <li className="d-inline-block me-5 mb-2">
+                <span className="fw-bold">Allowed Attempts</span>{" "}
+                {quiz?.attemptLimit}
+              </li>
+            </>
+          ) : (
+            <>
+              <li className="d-inline-block me-5 mb-2">
+                <span className="fw-bold">Unlimited Attempts</span>{" "}
+              </li>
+            </>
+          )}
         </ul>
         <hr />
         <QuizStudentControls
@@ -85,7 +95,11 @@ export default function QuizStudent() {
           untilTime={untilTime}
           quiz={quiz}
           answered={!!answers && answers.length > 0}
-          canAnswer={!!quiz && !!answers && answers.length < quiz.attemptLimit}
+          canAnswer={
+            !!quiz &&
+            !!answers &&
+            (!quiz.multipleAttempts || answers.length < quiz.attemptLimit)
+          }
         />
         {answers && questions && answers.length > 0 && (
           <StudentAnswerView
@@ -124,17 +138,25 @@ export default function QuizStudent() {
               </tbody>
             </table>
             <div className="mb-2 ms-4 font-color-secondary">
-              {(quiz?.attemptLimit as number) - answers.length} attempts left
+              {quiz?.multipleAttempts
+                ? `${
+                    (quiz?.attemptLimit as number) - answers.length
+                  } attempts left`
+                : "Unlimited Attempts Left"}
             </div>
-            {(quiz?.attemptLimit as number) > answers.length && (
+            {!quiz?.multipleAttempts ||
+            (quiz.multipleAttempts &&
+              (quiz?.attemptLimit as number) > answers.length) ? (
               <div>
                 <Link
                   to={`../Quizzes/${qid}/preview`}
-                  className="text-decoration-none text-danger"
+                  className="text-decoration-none text-danger ms-4"
                 >
                   Take the Quiz Again
                 </Link>
               </div>
+            ) : (
+              <></>
             )}
           </div>
         </div>

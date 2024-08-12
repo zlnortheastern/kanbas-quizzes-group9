@@ -29,7 +29,7 @@ export default function QuizDetails() {
   const quiz = useSelector((state: any) =>
     state.quizzesReducer.quizzes.find((q: any) => q._id === qid)
   );
-  console.log("HHHHH");
+  
   useEffect(() => {
     const fetchQuestionsAndAnswers = async () => {
       if (qid) {
