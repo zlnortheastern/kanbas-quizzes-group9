@@ -1,17 +1,4 @@
-import React, { useEffect, useState } from "react";
-import {
-  useNavigate,
-  useParams,
-  Link,
-  NavLink,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import * as client from "../client";
-import { FaBan } from "react-icons/fa";
-import { IoEllipsisVertical } from "react-icons/io5";
+import React from "react";
 import {
   BtnBold,
   BtnItalic,
@@ -29,147 +16,41 @@ import {
   Toolbar,
 } from "react-simple-wysiwyg";
 import "./index.css";
-import { setQuiz, addQuiz, updateQuiz } from "../reducer";
+import { Quiz, ShowAnswerType } from "../interface";
 
-export default function EditDetails() {
-  const quiz = useSelector((state: any) => state.quizzesReducer.quiz);
-  const questions = useSelector(
-    (state: any) => state.questionsReducer.questions
-  );
-  const dispatch = useDispatch();
-  const { cid, qid } = useParams();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (qid !== "new" && qid !== undefined) {
-      client.getQuizById(qid).then((quiz) => {
-        dispatch(setQuiz(quiz));
-      });
-    } else {
-      dispatch(setQuiz({ title: "", description: "", points: 0, ...quiz }));
-    }
-  }, [qid, dispatch]);
-
-  const [quizType, setQuizType] = useState("Graded Quiz");
-  const [assignmentGroup, setAssignmentGroup] = useState("Quizzes");
-  const [multipleAttempts, setMultipleAttempts] = useState(false);
-  const [showCorrectAnswers, setShowCorrectAnswers] = useState("Always");
-  const [accessCode, setAccessCode] = useState("");
-  const [points, setPoints] = useState(0);
-
-  const calculatePoints = (questions: any) => {
-    let totalPoints = 0;
-    questions.forEach((question: any) => {
-      totalPoints += question.points;
-    });
-    return totalPoints;
-  };
-
-  const handleAddQuiz = (published: any) => {
-    const newQuiz = {
-      ...quiz,
-      published: published,
-      points: calculatePoints(questions),
-    };
-    dispatch(setQuiz(newQuiz));
-    if (published && cid !== undefined) {
-      client.createQuiz(cid, newQuiz).then((quiz) => {
-        dispatch(addQuiz(quiz));
-        dispatch(setQuiz(quiz));
-        navigate(`/Kanbas/Courses/${cid}/Quizzes/`);
-      });
-    } else if (cid !== undefined) {
-      client.createQuiz(cid, newQuiz).then((quiz) => {
-        dispatch(addQuiz(quiz));
-        dispatch(setQuiz(quiz));
-        navigate(`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`);
-      });
+export default function EditDetails({
+  quiz,
+  changeQuiz,
+}: {
+  quiz: Quiz;
+  changeQuiz: (quiz: Quiz) => void;
+}) {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (quiz) {
+      const updatedQuiz = { ...quiz, [e.target.name]: e.target.value };
+      changeQuiz(updatedQuiz);
     }
   };
-  const handleUpdateQuiz = (published: any) => {
-    const newQuiz = {
-      ...quiz,
-      published: published,
-      points: calculatePoints(questions),
-    };
-    dispatch(setQuiz(newQuiz));
-    if (published) {
-      dispatch(setQuiz(newQuiz));
-      client.updateQuiz(newQuiz).then(() => {
-        dispatch(updateQuiz(newQuiz));
-        navigate(`/Kanbas/Courses/${cid}/Quizzes/`);
-      });
-    } else {
-      client.updateQuiz(newQuiz).then(() => {
-        dispatch(updateQuiz(newQuiz));
-        dispatch(setQuiz(newQuiz));
-        navigate(`/Kanbas/Courses/${cid}/Quizzes/${newQuiz._id}`);
-      });
-    }
-  };
-  const handleSave = (published: any) => {
-    if (qid === "new") {
-      handleAddQuiz(published);
-    } else {
-      handleUpdateQuiz(published);
-    }
-  };
-
   return (
-    <div className="me-2">
-      <div className="float-end mt-2">
-        Points {quiz.points} &nbsp; &nbsp;
-        {quiz.published ? (
-          <FaBan style={{ color: "green" }} aria-hidden="true" />
-        ) : (
-          <FaBan style={{ color: "grey" }} aria-hidden="true" />
-        )}
-        &nbsp;
-        {quiz.published ? "Published" : "Not Published"}&nbsp; &nbsp;
-        <button type="button" className="btn btn-light ">
-          <IoEllipsisVertical />
-        </button>
-      </div>
-      <br />
-      <br />
-      <hr />
-      <div className="nav nav-tabs">
-        <NavLink
-          className={({ isActive }) =>
-            isActive ? "nav-link active" : "nav-link"
-          }
-          to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/edit`}
-        >
-          Details
-        </NavLink>
-        <NavLink
-          className={({ isActive }) =>
-            isActive ? "nav-link active" : "nav-link"
-          }
-          to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/questions`}
-        >
-          Questions
-        </NavLink>
-      </div>
+    <>
       <br />
       <input
-        value={quiz?.title}
+        value={quiz.title}
+        name="title"
         className="form-control mb-2"
-        onChange={(e) => dispatch(setQuiz({ ...quiz, title: e.target.value }))}
+        onChange={handleInputChange}
       />
       <br />
       <label htmlFor="input-1" className="form-label ">
         Quiz Instructions:
       </label>
-
       <div className="d-flex justify-content-between" style={{ width: "100%" }}>
         <EditorProvider>
           <Editor
             value={quiz.description}
-            onChange={(e) => {
-              const newValue = e.target.value;
-              dispatch(setQuiz({ ...quiz, description: newValue }));
-            }}
+            onChange={(e) =>
+              changeQuiz({ ...quiz, description: e.target.value })
+            }
           >
             <Toolbar>
               <BtnUndo />
@@ -188,7 +69,6 @@ export default function EditDetails() {
           </Editor>
         </EditorProvider>
       </div>
-
       <br />
       <br />
       <div className="container">
@@ -202,7 +82,7 @@ export default function EditDetails() {
               className="form-select"
               value={quiz.quizType}
               onChange={(e) =>
-                dispatch(setQuiz({ ...quiz, quizType: e.target.value }))
+                changeQuiz({ ...quiz, quizType: e.target.value })
               }
             >
               <option value="Graded Quiz">Graded Quiz</option>
@@ -223,7 +103,7 @@ export default function EditDetails() {
               className="form-select"
               value={quiz.assignmentGroup}
               onChange={(e) =>
-                dispatch(setQuiz({ ...quiz, assignmentGroup: e.target.value }))
+                changeQuiz({ ...quiz, assignmentGroup: e.target.value })
               }
             >
               <option value="Assignments">Assignments</option>
@@ -243,16 +123,13 @@ export default function EditDetails() {
               className="form-control"
               id="input-2"
               value={quiz.points}
-              onChange={(e) =>
-                dispatch(setQuiz({ ...quiz, points: e.target.value }))
-              }
+              disabled
             />
           </div>
         </div>
         <br />
       </div>
       <br />
-
       <div className="row justify-content-center align-items-center">
         <div className="col-2 text-center">
           <div>Options</div>
@@ -265,9 +142,10 @@ export default function EditDetails() {
                 className="form-check-input me-2"
                 checked={quiz.shuffleAnswers}
                 onChange={(e) =>
-                  dispatch(
-                    setQuiz({ ...quiz, shuffleAnswers: e.target.checked })
-                  )
+                  changeQuiz({
+                    ...quiz,
+                    shuffleAnswers: e.target.checked,
+                  })
                 }
                 id="shuffleAnswers"
               />
@@ -279,9 +157,12 @@ export default function EditDetails() {
               <input
                 type="checkbox"
                 className="form-check-input me-2"
-                checked={quiz.timeLimit}
+                checked={quiz.timeLimit !== -1}
                 onChange={(e) =>
-                  dispatch(setQuiz({ ...quiz, timeLimit: e.target.checked }))
+                  changeQuiz({
+                    ...quiz,
+                    timeLimit: e.target.checked ? quiz.timeLimit || 0 : -1,
+                  })
                 }
                 id="timeLimit"
               />
@@ -298,9 +179,10 @@ export default function EditDetails() {
                 id="timeLimit"
                 value={quiz.timeLimit}
                 onChange={(e) =>
-                  dispatch(
-                    setQuiz({ ...quiz, timeLimit: parseInt(e.target.value) })
-                  )
+                  changeQuiz({
+                    ...quiz,
+                    timeLimit: Number(e.target.value),
+                  })
                 }
                 style={{ width: "70px", marginRight: "5px", marginTop: "-7px" }}
               />
@@ -312,9 +194,10 @@ export default function EditDetails() {
                 className="form-check-input me-2"
                 checked={quiz.multipleAttempts}
                 onChange={(e) => {
-                  dispatch(
-                    setQuiz({ ...quiz, multipleAttempts: e.target.checked })
-                  );
+                  changeQuiz({
+                    ...quiz,
+                    multipleAttempts: e.target.checked,
+                  });
                 }}
                 id="multipleAttempts"
               />
@@ -329,14 +212,12 @@ export default function EditDetails() {
                 type="number"
                 className="form-control"
                 id="multipleAttempts"
-                value={quiz.multipleAttempts}
+                value={quiz.attemptLimit}
                 onChange={(e) =>
-                  dispatch(
-                    setQuiz({
-                      ...quiz,
-                      multipleAttempts: parseInt(e.target.value),
-                    })
-                  )
+                  changeQuiz({
+                    ...quiz!,
+                    attemptLimit: Number(e.target.value),
+                  })
                 }
                 style={{
                   width: "70px",
@@ -353,9 +234,10 @@ export default function EditDetails() {
                 className="form-select"
                 value={quiz.showCorrectAnswers}
                 onChange={(e) => {
-                  const newValue = e.target.value;
-                  setShowCorrectAnswers(newValue);
-                  dispatch(setQuiz({ ...quiz, showCorrectAnswers: newValue }));
+                  changeQuiz({
+                    ...quiz,
+                    showCorrectAnswers: e.target.value as ShowAnswerType,
+                  });
                 }}
               >
                 <option value="immediately">Immediately</option>
@@ -371,9 +253,7 @@ export default function EditDetails() {
                 id="accessCode"
                 value={quiz.accessCode}
                 onChange={(e) => {
-                  const newValue = e.target.value;
-                  setAccessCode(newValue);
-                  dispatch(setQuiz({ ...quiz, accessCode: newValue }));
+                  changeQuiz({ ...quiz, accessCode: e.target.value });
                 }}
               />
             </li>
@@ -381,11 +261,12 @@ export default function EditDetails() {
               <input
                 type="checkbox"
                 className="form-check-input me-2"
-                checked={quiz.onQuestionAtATime}
+                checked={quiz.oneQuestionAtATime}
                 onChange={(e) =>
-                  dispatch(
-                    setQuiz({ ...quiz, onQuestionAtATime: e.target.checked })
-                  )
+                  changeQuiz({
+                    ...quiz,
+                    oneQuestionAtATime: e.target.checked,
+                  })
                 }
                 id="onQuestionAtaTime"
               />
@@ -399,9 +280,10 @@ export default function EditDetails() {
                 className="form-check-input me-2"
                 checked={quiz.webcamRequired}
                 onChange={(e) =>
-                  dispatch(
-                    setQuiz({ ...quiz, webcamRequired: e.target.checked })
-                  )
+                  changeQuiz({
+                    ...quiz,
+                    webcamRequired: e.target.checked,
+                  })
                 }
                 id="webcamRequired"
               />
@@ -414,14 +296,7 @@ export default function EditDetails() {
                 type="checkbox"
                 className="form-check-input me-2"
                 checked={quiz.lockQuestionsAfterAnswering}
-                onChange={(e) =>
-                  dispatch(
-                    setQuiz({
-                      ...quiz,
-                      lockQuestionsAfterAnswering: e.target.checked,
-                    })
-                  )
-                }
+                onChange={handleInputChange}
                 id="lockQuestionsAfterAnswering"
               />
               <label
@@ -435,7 +310,6 @@ export default function EditDetails() {
         </div>
       </div>
       <br />
-
       <div className="row justify-content-center align-items-center">
         <div className="col-2 text-center">
           <div>Assign</div>
@@ -458,10 +332,9 @@ export default function EditDetails() {
                 type="date"
                 className="form-control"
                 id="input-4"
+                name="dueDate"
                 value={quiz.dueDate}
-                onChange={(e) =>
-                  dispatch(setQuiz({ ...quiz, dueDate: e.target.value }))
-                }
+                onChange={handleInputChange}
               />
             </li>
             <li className="list-group-item border-0">
@@ -481,12 +354,9 @@ export default function EditDetails() {
                     type="date"
                     className="form-control"
                     id="input-5"
-                    value={quiz.availabilityDate}
-                    onChange={(e) =>
-                      dispatch(
-                        setQuiz({ ...quiz, availabilityDate: e.target.value })
-                      )
-                    }
+                    name="availableDate"
+                    value={quiz.availableDate}
+                    onChange={handleInputChange}
                   />
                 </div>
                 <div className="col-6">
@@ -494,10 +364,9 @@ export default function EditDetails() {
                     type="date"
                     className="form-control"
                     id="input-6"
-                    value={quiz.untilDate}
-                    onChange={(e) =>
-                      dispatch(setQuiz({ ...quiz, untilDate: e.target.value }))
-                    }
+                    name="availableUntilDate"
+                    value={quiz.availableUntilDate}
+                    onChange={handleInputChange}
                   />
                 </div>
               </div>
@@ -507,26 +376,6 @@ export default function EditDetails() {
       </div>
       <hr />
       <br />
-      <div className="button-container">
-        <button
-          onClick={() => handleSave(false)}
-          className="btn btn-danger ms-2 mb-4 float-end"
-        >
-          Save
-        </button>
-        <button
-          onClick={() => handleSave(true)}
-          className="btn btn-success ms-2 mb-4 float-end"
-        >
-          Save & Publish
-        </button>
-        <Link
-          to={`/Kanbas/Courses/${cid}/Quizzes`}
-          className="btn btn-secondary ms-2 mb-4 float-end"
-        >
-          Cancel
-        </Link>
-      </div>
-    </div>
+    </>
   );
 }
