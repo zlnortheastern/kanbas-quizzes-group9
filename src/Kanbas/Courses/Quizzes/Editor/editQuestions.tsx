@@ -44,7 +44,7 @@ export default function EditQuestions({
   }, []);
 
   const newQuestion = () => {
-    const newQuestion: Question = {
+    const newQuestionSet: Question = {
       type: QuestionType.multipleChoice,
       title: "",
       points: 0,
@@ -54,15 +54,15 @@ export default function EditQuestions({
       blank: [],
     };
 
-    const updatedQuestions = [...questionSet.questions, newQuestion];
+    const updatedQuestions = [...questionSet.questions, newQuestionSet];
     changeQuestionSet({ ...questionSet, questions: updatedQuestions });
 
     setQuestionList((prevList) => [
       ...prevList,
       <QuestionForm
-        index={updatedQuestions.length}
+        index={updatedQuestions.length - 1}
         editing={true}
-        question={newQuestion}
+        question={newQuestionSet}
         onQuestionChange={updateQuestionList}
       />,
     ]);

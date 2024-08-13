@@ -63,22 +63,23 @@ export default function Editor() {
   };
 
   const handleSave = async (published: any) => {
-    if (qid) {
+    if (qid && cid) {
       if (qid === "new") {
-        await client.createQuizAndQuestion(
-          qid,
+        const data = await client.createQuizAndQuestion(
+          cid,
           { ...quiz, published: published },
           questionSet
         );
+        navigate(`/Kanbas/Courses/${cid}/Quizzes/${data.createdQuiz._id}`);
       } else {
         await client.updateQuizAndQuestion(
           qid,
           { ...quiz, published: published },
           questionSet
         );
+        navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`);
       }
     }
-    navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`);
   };
 
   const changeQuiz = (updatedQuiz: Quiz) => {

@@ -46,11 +46,11 @@ export const getQuestionsByQuiz = async (qid: string) => {
 };
 
 export const createQuizAndQuestion = async (
-  qid: string,
+  cid: string,
   quiz: Quiz,
   questionSet: Questions
 ) => {
-  const response = await axios.post(`${QUIZZES_API}/${qid}/questions`, {
+  const response = await axios.post(`${COURSES_API}/${cid}/quizzes/questions`, {
     quiz: quiz,
     questionSet: questionSet,
   });
