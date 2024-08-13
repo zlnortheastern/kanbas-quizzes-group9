@@ -87,3 +87,8 @@ export const submitQuizAnswers = async (
   );
   return response.data;
 };
+
+export const saveQuizAnswers = async (answerId: string, answerSet: any) => {
+  const response = await axios.put(`${ANSWER_API}/${answerId}`, answerSet);
+  return response.data;
+};
