@@ -138,6 +138,14 @@ export default function QuizPreview() {
             console.error('Quiz ID or User ID is undefined');
             return;
         }
+
+        // Check if all questions are answered
+        const allAnswered = answers.every(isQuestionAnswered);
+        if (!allAnswered) {
+            alert("You must answer all questions before submitting the quiz.");
+            return;
+        }
+
         const answerSet = {
             user: userId,
             quiz: qid,
@@ -146,7 +154,7 @@ export default function QuizPreview() {
             time_used: timeElapsed,
         };
         try {
-            const response =  await client.submitQuizAnswers(qid, userId, answerSet);
+            await client.submitQuizAnswers(qid, userId, answerSet);
             // console.log('Quiz submitted');
             navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`);
         } catch (error) {
@@ -288,14 +296,14 @@ export default function QuizPreview() {
                 </div>
                 <div className="col-md-4">
                     {role === "FACULTY" && (
-                      <Link
-                          to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/questions`}
+                      <button
                           className="btn btn-secondary text-decoration-none"
+                          disabled
                       >
                           <span className='fw-bold'>
                               <RiPencilLine className="me-2"/> Keep Editing This Quiz
                           </span>
-                      </Link>
+                      </button>
                     ) }
                     <div className='question-list-group mt-5'>
                       <h4 >Questions</h4>
