@@ -1,5 +1,6 @@
-import { Answers } from "./Courses/Quizzes/interface";
-
+import { Answers, Question, Questions } from "./Courses/Quizzes/interface";
+export const MAX_DATE_TIME = 8640000000000000;
+export const MIN_DATE_TIME = -8640000000000000;
 export const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   const monthNames = [
@@ -46,4 +47,12 @@ export const getHighestScore = (answers: Answers[]) => {
     if (answer.score > result) result = answer.score;
   });
   return result;
+};
+
+export const calculateQuizPoints = (questionSet: Questions) => {
+  let points = 0;
+  questionSet.questions.forEach((q) => {
+    points += q.points;
+  });
+  return points;
 };

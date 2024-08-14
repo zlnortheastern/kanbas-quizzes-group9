@@ -8,7 +8,6 @@ export default function Registration() {
   const user = useAuth();
   const fetchEnrollableCourses = async (userId: string) => {
     const data = await client.getEnrollables(userId);
-    console.log(data);
     setCourses(data);
   };
   const enrollACourse = async (courseId: string) => {

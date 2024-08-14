@@ -16,6 +16,7 @@ import { useUserRole } from "../Authentication/AuthProvider";
 import QuizStudent from "./Quizzes/StudentView";
 import ViewAttempt from "./Quizzes/StudentView/ViewAttempt";
 import QuizPreview from "./Quizzes/QuizPreview";
+import Editor from "./Quizzes/Editor";
 export default function Courses({ courses }: { courses: any[] }) {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
@@ -45,9 +46,8 @@ export default function Courses({ courses }: { courses: any[] }) {
               path="Quizzes/:qid"
               element={role === "FACULTY" ? <QuizDetails /> : <QuizStudent />}
             />
-            <Route path="Quizzes/:qid/edit" element={<EditDetails />} />
+            <Route path="Quizzes/:qid/edit" element={<Editor />} />
             <Route path="Quizzes/:qid/preview" element={<QuizPreview />} />
-            <Route path="Quizzes/:qid/questions" element={<EditQuestions />} />
             <Route path="Quizzes/:qid/Answer/:aid" element={<ViewAttempt />} />
             <Route path="People" element={<PeopleTable />} />
             <Route path="People/:uid" element={<PeopleTable />} />
