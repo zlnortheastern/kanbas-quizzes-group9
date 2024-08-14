@@ -153,7 +153,7 @@ export default function Editor() {
           Save & Publish
         </button>
         <Link
-          to={`/Kanbas/Courses/${cid}/Quizzes/${qid}`}
+          to={`/Kanbas/Courses/${cid}/Quizzes/`}
           className="btn btn-secondary ms-2 mb-4 float-end"
         >
           Cancel
