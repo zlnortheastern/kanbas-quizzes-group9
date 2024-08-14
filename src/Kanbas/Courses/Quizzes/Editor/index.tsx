@@ -20,7 +20,7 @@ const initialQuiz = {
   shuffleAnswers: true,
   timeLimit: 20,
   multipleAttempts: false,
-  attemptLimit: -1,
+  attemptLimit: 1,
   showCorrectAnswers: ShowAnswerType.immediately,
   accessCode: "",
   oneQuestionAtATime: true,
