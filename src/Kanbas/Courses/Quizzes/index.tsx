@@ -153,8 +153,9 @@ export default function Quizzes() {
   useEffect(() => {
     fetchQuizzes();
   }, [role]);
-
-  if (Object.keys(quizData).length < 1) return <div>Loading...</div>;
+  
+  if (Object.keys(quizData).length < 1 && quizzes.length !== 0)
+    return <div>Loading...</div>;
   return (
     <div id="wd-quizzes">
       <QuizzesControls userRole={role} />

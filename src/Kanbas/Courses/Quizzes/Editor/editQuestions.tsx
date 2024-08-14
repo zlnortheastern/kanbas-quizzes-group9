@@ -22,10 +22,23 @@ export default function EditQuestions({
   const updateQuestionList = (index: number, updatedQuestion: Question) => {
     const questionList = [...questionSet.questions];
     questionList[index] = updatedQuestion;
-    changeQuestionSet({
+    const updatedQuestionSet = {
       ...questionSet,
       questions: questionList,
-    });
+    };
+    changeQuestionSet(updatedQuestionSet);
+    setQuestionList(
+      updatedQuestionSet.questions.map((question, i) => (
+        <QuestionForm
+          key={i}
+          index={i}
+          editing={false}
+          question={question}
+          onQuestionChange={updateQuestionList}
+          deleteQuestion={deleteQuestion}
+        />
+      ))
+    );
   };
 
   const deleteQuestion = (index: number) => {

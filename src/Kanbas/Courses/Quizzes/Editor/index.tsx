@@ -12,7 +12,7 @@ import GreenCheckmark from "../../Modules/GreenCheckmark";
 
 const initialQuiz = {
   _id: "",
-  title: "",
+  title: "New Quiz Title",
   description: "",
   quizType: "Graded Quiz",
   points: 0,
@@ -77,7 +77,11 @@ export default function Editor() {
           { ...quiz, published: published },
           questionSet
         );
-        navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}`);
+        navigate(
+          published
+            ? `/Kanbas/Courses/${cid}/Quizzes/`
+            : `/Kanbas/Courses/${cid}/Quizzes/${qid}`
+        );
       }
     }
   };
@@ -153,7 +157,7 @@ export default function Editor() {
           Save & Publish
         </button>
         <Link
-          to={`/Kanbas/Courses/${cid}/Quizzes/`}
+          to={`/Kanbas/Courses/${cid}/Quizzes`}
           className="btn btn-secondary ms-2 mb-4 float-end"
         >
           Cancel

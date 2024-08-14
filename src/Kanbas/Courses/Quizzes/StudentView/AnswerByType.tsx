@@ -55,7 +55,9 @@ export default function AnswerByType({
     );
   } else if (question.type === QuestionType.multipleChoice) {
     const correct =
-      question.choices && answer.choice && question.choices[answer.choice].correct;
+      question.choices !== undefined &&
+      answer.choice !== undefined &&
+      question.choices[answer.choice].correct;
     return (
       <div className="mx-3 mb-4" style={{ fontSize: "0.88rem" }}>
         {question.choices?.map((choice, index) => (
