@@ -28,6 +28,26 @@ export default function EditQuestions({
     });
   };
 
+  const deleteQuestion = (index: number) => {
+    const updatedQuestions = questionSet.questions.filter(
+      (_, i) => i !== index
+    );
+    changeQuestionSet({ ...questionSet, questions: updatedQuestions });
+
+    setQuestionList(
+      updatedQuestions.map((question, i) => (
+        <QuestionForm
+          key={i}
+          index={i}
+          editing={false}
+          question={question}
+          onQuestionChange={updateQuestionList}
+          deleteQuestion={deleteQuestion}
+        />
+      ))
+    );
+  };
+
   useEffect(() => {
     setQuestionList(
       questionSet.questions.map((question, index) => {
@@ -37,6 +57,7 @@ export default function EditQuestions({
             editing={false}
             question={question}
             onQuestionChange={updateQuestionList}
+            deleteQuestion={deleteQuestion}
           />
         );
       })
@@ -64,6 +85,7 @@ export default function EditQuestions({
         editing={true}
         question={newQuestionSet}
         onQuestionChange={updateQuestionList}
+        deleteQuestion={deleteQuestion}
       />,
     ]);
   };

@@ -24,6 +24,7 @@ interface QuestionFormProps {
   editing: boolean;
   question: Question;
   onQuestionChange: (index: number, question: Question) => void;
+  deleteQuestion: (index: number) => void;
 }
 
 export default function QuestionForm({
@@ -31,6 +32,7 @@ export default function QuestionForm({
   editing,
   question,
   onQuestionChange,
+  deleteQuestion,
 }: QuestionFormProps) {
   const [current, setCurrent] = useState<Question>(question);
   const [isEditing, setIsEditing] = useState<boolean>(editing);
@@ -462,6 +464,17 @@ export default function QuestionForm({
                 onClick={() => setIsEditing(true)}
               >
                 Edit
+              </button>
+              <button
+                className="btn btn-danger btn-sm float-end"
+                style={{
+                  position: "absolute",
+                  right: "80px",
+                  bottom: "15px",
+                }}
+                onClick={() => deleteQuestion(index)}
+              >
+                Delete
               </button>
             </div>
           </div>
