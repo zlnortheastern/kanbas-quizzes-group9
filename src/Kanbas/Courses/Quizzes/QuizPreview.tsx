@@ -94,11 +94,11 @@ export default function QuizPreview() {
     if (qid) {
       if (role === "FACULTY") {
         const latestAnswer = await client.getLatestAnswerByUser(qid, userId);
-        setAnswerId(latestAnswer._id);
         // console.log('Latest answers fetched for faculty in PREVIEW page:', latestAnswer);
         if (latestAnswer) {
           // console.log('Latest answers fetched for faculty:', latestAnswer);
           setAnswers(latestAnswer.answers);
+          setAnswerId(latestAnswer._id);
         } else {
           const initializedAnswers = initializeAnswers(questions);
           setAnswers(initializedAnswers);
@@ -128,7 +128,8 @@ export default function QuizPreview() {
   }, [qid, userId, role]);
 
   if (!quiz) return <div>Loading...no such quiz</div>;
-  if (!questions || questions.length === 0) return <div>Questions is [].</div>;
+  if (!questions || questions.length === 0)
+    return <div>Question set for this quiz is empty.</div>;
 
   if (currentQuestionIndex >= questions.length) {
     setCurrentQuestionIndex(questions.length - 1);
