@@ -172,11 +172,12 @@ export default function QuizPreview() {
       time_used: timeElapsed,
     };
     try {
+      console.log(answers);
       if (role === "STUDENT") {
         await client.submitQuizAnswers(qid, userId, answerSet);
-      } else if (answers.length < 1) {
+      } else if (!answerId) {
         await client.submitQuizAnswers(qid, userId, answerSet);
-      } else if (answerId) {
+      } else {
         await client.saveQuizAnswers(answerId, answerSet);
       }
       // console.log('Quiz submitted');
