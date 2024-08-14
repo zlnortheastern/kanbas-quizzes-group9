@@ -29,7 +29,7 @@ export default function QuizDetails() {
   const quiz = useSelector((state: any) =>
     state.quizzesReducer.quizzes.find((q: any) => q._id === qid)
   );
-  
+
   useEffect(() => {
     const fetchQuestionsAndAnswers = async () => {
       if (qid) {
@@ -172,11 +172,23 @@ export default function QuizDetails() {
         </thead>
         <tbody>
           <tr>
-            <td>{formatDate(new Date(quiz.dueDate).toLocaleString())}</td>
-            <td>Everyone</td>
-            <td>{formatDate(new Date(quiz.availableDate).toLocaleString())}</td>
             <td>
-              {formatDate(new Date(quiz.availableUntilDate).toLocaleString())}
+              {quiz.dueDate === ""
+                ? "No Due Date"
+                : formatDate(new Date(quiz.dueDate).toLocaleString())}
+            </td>
+            <td>Everyone</td>
+            <td>
+              {quiz.dueDate === ""
+                ? "No Available Date"
+                : formatDate(new Date(quiz.availableDate).toLocaleString())}
+            </td>
+            <td>
+              {quiz.dueDate === ""
+                ? "No Until Date"
+                : formatDate(
+                    new Date(quiz.availableUntilDate).toLocaleString()
+                  )}
             </td>
           </tr>
         </tbody>

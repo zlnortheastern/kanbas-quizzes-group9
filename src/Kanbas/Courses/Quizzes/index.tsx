@@ -11,7 +11,7 @@ import { deleteQuiz, setQuizzes, togglePublishQuiz } from "./reducer";
 import * as client from "./client";
 import QuizContextMenu from "./QuizContextMenu";
 import { useUserRole } from "../../Authentication/AuthProvider";
-import { formatDate } from "../../util";
+import { formatDate, MAX_DATE_TIME, MIN_DATE_TIME } from "../../util";
 import { Answers } from "./interface";
 import { useAuth } from "../../Authentication/AuthProvider";
 
@@ -128,10 +128,14 @@ export default function Quizzes() {
   };
 
   const getAvailability = (quiz: any) => {
+    const availableDate = new Date(
+      quiz.availableDate === "" ? MIN_DATE_TIME : quiz.availableDate
+    );
+    const availableUntilDate = new Date(
+      quiz.availableUntilDate === "" ? MAX_DATE_TIME : quiz.availableUntilDate
+    );
     const currentDate = new Date();
-    const availableDate = new Date(quiz.availableDate);
-    const dueDate = new Date(quiz.dueDate);
-    const availableUntilDate = new Date(quiz.availableUntilDate);
+
     if (currentDate > availableUntilDate) {
       return "Closed";
     } else if (
@@ -186,9 +190,16 @@ export default function Quizzes() {
                       {q.title}
                     </Link>
                     <p className="mb-0 text-muted fs-6">
-                      <b>{getAvailability(q)}</b> | <b>Due</b>{" "}
-                      {formatDate(q.dueDate)} | {q.points} pts |{" "}
-                      {quizData[q._id]?.questionCount || 0} Questions
+                      <b>{getAvailability(q)}</b> |{" "}
+                      {q.dueDate === "" ? (
+                        <b>No Due Date</b>
+                      ) : (
+                        <>
+                          <b>Due</b> {formatDate(q.dueDate)}
+                        </>
+                      )}{" "}
+                      | {q.points} pts | {quizData[q._id]?.questionCount || 0}{" "}
+                      Questions
                       {role === "STUDENT" &&
                         quizData[q._id]?.score !== -1 &&
                         quizData[q._id]?.total !== -1 && (

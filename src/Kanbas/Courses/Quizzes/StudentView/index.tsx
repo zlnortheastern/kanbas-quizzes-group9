@@ -3,7 +3,13 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { Answers, Questions, Quiz, ShowAnswerType } from "../interface";
 import * as client from "../client";
-import { formatDate, formatTime, getHighestScore } from "../../../util";
+import {
+  formatDate,
+  formatTime,
+  getHighestScore,
+  MAX_DATE_TIME,
+  MIN_DATE_TIME,
+} from "../../../util";
 import { useAuth } from "../../../Authentication/AuthProvider";
 import QuizStudentControls from "./QuizStudentControls";
 import StudentAnswerView from "./StudentAnswerView";
@@ -42,8 +48,14 @@ export default function QuizStudent() {
   }, []);
 
   const questionSet = questions?.questions;
-  const availableTime = new Date(quiz?.availableDate as string);
-  const untilTime = new Date(quiz?.availableUntilDate as string);
+  const availableTime = new Date(
+    quiz?.availableDate === "" ? MIN_DATE_TIME : (quiz?.availableDate as string)
+  );
+  const untilTime = new Date(
+    quiz?.availableUntilDate === ""
+      ? MAX_DATE_TIME
+      : (quiz?.availableUntilDate as string)
+  );
   const dueDateTime = new Date(quiz?.dueDate as string);
   const currentTime = new Date();
 
@@ -55,8 +67,14 @@ export default function QuizStudent() {
         <hr />
         <ul className="p-0">
           <li className="d-inline-block me-5 mb-2">
-            <span className="fw-bold">Due</span>{" "}
-            {formatDate(quiz?.dueDate as string)}
+            {quiz?.dueDate === "" ? (
+              <b>Not Due Date</b>
+            ) : (
+              <>
+                <span className="fw-bold">Due</span>{" "}
+                {formatDate(quiz?.dueDate as string)}
+              </>
+            )}
           </li>
           <li className="d-inline-block me-5 mb-2">
             <span className="fw-bold">Points</span> {quiz?.points}
@@ -65,9 +83,12 @@ export default function QuizStudent() {
             <span className="fw-bold">Questions</span> {questionSet?.length}
           </li>
           <li className="d-inline-block me-5 mb-2">
-            <span className="fw-bold">Available</span>{" "}
-            {formatDate(quiz?.availableDate as string)} -{" "}
-            {formatDate(quiz?.availableUntilDate as string)}
+            {quiz?.availableDate !== "" && quiz?.availableUntilDate !== "" && (
+              <>
+                <b>Available</b> {formatDate(quiz?.availableDate as string)} -{" "}
+                {formatDate(quiz?.availableUntilDate as string)}
+              </>
+            )}
           </li>
           <li className="d-inline-block me-5 mb-2">
             <span className="fw-bold">Time Limit</span> {quiz?.timeLimit}{" "}

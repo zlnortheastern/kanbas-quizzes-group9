@@ -1,5 +1,6 @@
 import { Answers, Question, Questions } from "./Courses/Quizzes/interface";
-
+export const MAX_DATE_TIME = 8640000000000000;
+export const MIN_DATE_TIME = -8640000000000000;
 export const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   const monthNames = [
