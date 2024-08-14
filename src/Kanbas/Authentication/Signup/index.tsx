@@ -34,7 +34,6 @@ export default function Signup() {
         errors.push(<li>{key} is required</li>);
       }
     }
-    console.log(errors);
     if (errors.length > 0) {
       setErrorMessage(errors);
       return false;

@@ -96,7 +96,6 @@ export default function Editor() {
     fetchQuestionSet();
   }, []);
 
-  console.log(questionSet);
   if (loading) return <></>;
   return (
     <div className="me-2">

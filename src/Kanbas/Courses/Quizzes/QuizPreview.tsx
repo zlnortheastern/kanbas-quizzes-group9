@@ -172,7 +172,6 @@ export default function QuizPreview() {
       time_used: timeElapsed,
     };
     try {
-      console.log(answers);
       if (role === "STUDENT") {
         await client.submitQuizAnswers(qid, userId, answerSet);
       } else if (!answerId) {
