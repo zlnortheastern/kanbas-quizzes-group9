@@ -152,9 +152,10 @@ export default function QuizPreview() {
       ...newAnswers[questionIndex],
       ...answer,
     };
-    setAnswers(newAnswers);
-    if (answers.length > 0 && newAnswers.every(isQuestionAnswered))
+    console.log(newAnswers);
+    if (newAnswers.length > 0 && newAnswers.every(isQuestionAnswered))
       setAllAnswered(true);
+    setAnswers(newAnswers);
   };
 
   const handleNextQuestion = () => {

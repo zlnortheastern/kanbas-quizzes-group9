@@ -51,14 +51,14 @@ export default function ViewAttempt() {
   const currentTime = new Date();
 
   let displayQuestion = true;
-  let displayAnswer = true;
+  let displayAnswer = false;
 
   if (
     (quiz?.showCorrectAnswers === ShowAnswerType.after_due_date &&
       currentTime > dueDateTime) ||
     quiz?.showCorrectAnswers === ShowAnswerType.immediately
   ) {
-    displayAnswer = false;
+    displayAnswer = true;
   } else if (quiz?.showCorrectAnswers === ShowAnswerType.never) {
     displayQuestion = false;
   }
