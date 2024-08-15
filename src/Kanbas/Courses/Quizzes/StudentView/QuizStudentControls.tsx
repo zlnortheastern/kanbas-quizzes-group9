@@ -21,7 +21,12 @@ export default function QuizStudentControls({
   if (availableTime < currentTime && currentTime < untilTime) {
     return (
       <div>
-        {quiz?.description && <p className="mb-5">{quiz.description}</p>}
+        {quiz?.description && (
+          <p
+            className="mb-5"
+            dangerouslySetInnerHTML={{ __html: quiz.description }}
+          />
+        )}
         <div className="text-center">
           {canAnswer && (
             <Link

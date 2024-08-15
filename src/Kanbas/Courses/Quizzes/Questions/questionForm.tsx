@@ -438,7 +438,10 @@ export default function QuestionForm({
           </div>
           <div style={{ width: "100%" }}>
             <div id="question-description" className="p-4 my-3">
-              <div className="mb-2">{current.question}</div>
+              <div
+                className="mb-2"
+                dangerouslySetInnerHTML={{ __html: current.question }}
+              />
               <button
                 className="btn btn-danger btn-sm float-end ms-3"
                 onClick={() => setIsEditing(true)}
