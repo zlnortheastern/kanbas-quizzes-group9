@@ -47,6 +47,7 @@ export default function EditDetails({
       <div className="d-flex justify-content-between" style={{ width: "100%" }}>
         <EditorProvider>
           <Editor
+            containerProps={{ style: { width: "100%", resize: "vertical" } }}
             value={quiz.description}
             onChange={(e) =>
               changeQuiz({ ...quiz, description: e.target.value })
@@ -304,7 +305,8 @@ export default function EditDetails({
                   changeQuiz({
                     ...quiz,
                     lockQuestionsAfterAnswering: e.target.checked,
-                  })}
+                  })
+                }
                 id="lockQuestionsAfterAnswering"
               />
               <label

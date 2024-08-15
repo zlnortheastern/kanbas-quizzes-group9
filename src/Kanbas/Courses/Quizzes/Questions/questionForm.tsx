@@ -184,6 +184,9 @@ export default function QuestionForm({
               >
                 <EditorProvider>
                   <Editor
+                    containerProps={{
+                      style: { width: "100%", resize: "vertical" },
+                    }}
                     value={current.question}
                     onChange={(e) => {
                       //console.log(e.target.value);
@@ -298,18 +301,10 @@ export default function QuestionForm({
                     setCurrent(updatedCurrent);
                   }}
                 >
-                  <div className="row">
-                    <div className="col-auto">
-                      <i
-                        className="fa fa-plus text-danger"
-                        aria-hidden="true"
-                      ></i>
-                    </div>
-                    <div className="col-auto">
-                      <p className="text-danger">+ Add Another Answer</p>
-                    </div>
-                  </div>
+                  <p className="text-danger">+ Add Another Answer</p>
                 </button>
+                <br />
+                <br />
               </div>
             )}
             {current.type === QuestionType.fillInBlank && (
@@ -366,18 +361,10 @@ export default function QuestionForm({
                     setCurrent(updatedCurrent);
                   }}
                 >
-                  <div className="row">
-                    <div className="col-auto">
-                      <i
-                        className="fa fa-plus text-danger"
-                        aria-hidden="true"
-                      ></i>
-                    </div>
-                    <div className="col-auto">
-                      <p className="text-danger">+ Add Another Answer</p>
-                    </div>
-                  </div>
+                  <p className="text-danger">+ Add Another Answer</p>
                 </button>
+                <br />
+                <br />
               </div>
             )}
             {current.type === QuestionType.trueOrFalse && (
@@ -411,30 +398,29 @@ export default function QuestionForm({
                 </div>
               </div>
             )}
+            <div className="border-top p-3 mt-3">
+              <button
+                className="btn btn-danger float-end ms-2"
+                onClick={() => {
+                  setIsEditing(false);
+                  onQuestionChange(index, current);
+                }}
+              >
+                Update Question
+              </button>
+              <button
+                className="btn btn-secondary float-end"
+                onClick={() => {
+                  setCurrent(question);
+                  setIsEditing(false);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
           <br />
           <br />
-          <div className="border-top">
-            <button
-              className="btn btn-secondary m-2"
-              onClick={() => {
-                setCurrent(question);
-                setIsEditing(false);
-              }}
-            >
-              Cancel
-            </button>
-
-            <button
-              className="btn btn-danger m-2"
-              onClick={() => {
-                setIsEditing(false);
-                onQuestionChange(index, current);
-              }}
-            >
-              Update Question
-            </button>
-          </div>
         </div>
       ) : (
         <div
