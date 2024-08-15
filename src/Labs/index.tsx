@@ -11,8 +11,9 @@ export default function Labs() {
   return (
     <Provider store={store}>
       <div className="container-fluid">
-        <h1>Labs</h1>
-        <h2>Name: Zhi Ling</h2>
+        <h1>Final Team Project</h1>
+        <h2>Team 9</h2>
+        <h2>Name: Shufan Chai, Yumeng Zeng, Zhi Ling</h2>
         <h2>Section: CS5610.52323.202450</h2>
         <TOC />
         <Routes>
