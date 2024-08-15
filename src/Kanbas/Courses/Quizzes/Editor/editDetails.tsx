@@ -300,7 +300,11 @@ export default function EditDetails({
                 type="checkbox"
                 className="form-check-input me-2"
                 checked={quiz.lockQuestionsAfterAnswering}
-                onChange={handleInputChange}
+                onChange={(e) =>
+                  changeQuiz({
+                    ...quiz,
+                    lockQuestionsAfterAnswering: e.target.checked,
+                  })}
                 id="lockQuestionsAfterAnswering"
               />
               <label
