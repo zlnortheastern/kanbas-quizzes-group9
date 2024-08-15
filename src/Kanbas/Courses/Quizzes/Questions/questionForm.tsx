@@ -450,28 +450,17 @@ export default function QuestionForm({
             </div>
             <div className="fw-bold">Question {index + 1}</div>
           </div>
-
           <div style={{ width: "100%" }}>
-            <div id="question-description" className="p-3 my-3">
-              {current.question}
+            <div id="question-description" className="p-4 my-3">
+              <div className="mb-2">{current.question}</div>
               <button
-                className="btn btn-danger btn-sm float-end"
-                style={{
-                  position: "absolute",
-                  right: "20px",
-                  bottom: "15px",
-                }}
+                className="btn btn-danger btn-sm float-end ms-3"
                 onClick={() => setIsEditing(true)}
               >
                 Edit
               </button>
               <button
                 className="btn btn-danger btn-sm float-end"
-                style={{
-                  position: "absolute",
-                  right: "80px",
-                  bottom: "15px",
-                }}
                 onClick={() => deleteQuestion(index)}
               >
                 Delete
