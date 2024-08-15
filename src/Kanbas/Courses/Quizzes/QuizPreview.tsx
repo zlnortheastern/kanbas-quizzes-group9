@@ -96,6 +96,11 @@ export default function QuizPreview() {
         const latestAnswer = await client.getLatestAnswerByUser(qid, userId);
         // console.log('Latest answers fetched for faculty in PREVIEW page:', latestAnswer);
         if (latestAnswer) {
+          if (
+            latestAnswer.answers.length > 0 &&
+            latestAnswer.answers.every(isQuestionAnswered)
+          )
+            setAllAnswered(true);
           // console.log('Latest answers fetched for faculty:', latestAnswer);
           setAnswers(latestAnswer.answers);
           setAnswerId(latestAnswer._id);
@@ -119,7 +124,6 @@ export default function QuizPreview() {
     fetchQuiz();
     fetchQuestions();
     setStartTime(formattedTime);
-    if (answers && answers.every(isQuestionAnswered)) setAllAnswered(true);
     const timer = setInterval(() => {
       setTimeElapsed((prev) => prev + 1);
     }, 1000);
@@ -148,8 +152,9 @@ export default function QuizPreview() {
       ...newAnswers[questionIndex],
       ...answer,
     };
-    if (answers && answers.every(isQuestionAnswered)) setAllAnswered(true);
     setAnswers(newAnswers);
+    if (answers.length > 0 && newAnswers.every(isQuestionAnswered))
+      setAllAnswered(true);
   };
 
   const handleNextQuestion = () => {
